@@ -2,31 +2,40 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { AsyncStorage } from 'react-native';
+import { gql } from "apollo-boost";
+import { useQuery } from '@apollo/react-hooks';
+
+const cache = new InMemoryCache();
 
 const httpLink = createHttpLink({
   uri: 'http://d4a9a992.ngrok.io/graphql',
 });
 
-const retrieveToken = async () => {
-  const token = await AsyncStorage.getItem('sharkToken')
-  return token
-}
+const GET_TOKEN = gql`
+  {
+    token @client
+  }
+`;
 
 const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  const token = retrieveToken();
-  // return the headers to the context so httpLink can read them
+  const data = cache.readQuery({query: GET_TOKEN});
+  console.log(data.token)
   return {
     headers: {
-      authorization: token ? `Bearer ${token}` : "",
+      authorization: data.token ? `Bearer ${data.token}` : "",
     }
   }
 });
 
 export const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: cache,
   resolvers: {}
 });
+
+cache.writeData({
+  data: {
+    token: '',
+  }
+})
 

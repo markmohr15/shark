@@ -53,9 +53,9 @@ const SignUpForm = props => {
     if (!signUp.email) {
       setSignUp({...signUp, ["error"]: "Email cannot be blank"})
     } else {
-    signUpUser({ variables: { email: signUp.email, 
-                              password: signUp.password,
-                              passwordConfirmation: signUp.passwordConfirmation } });
+      signUpUser({ variables: { email: signUp.email, 
+                                password: signUp.password,
+                                passwordConfirmation: signUp.passwordConfirmation } });
     }
   }
 

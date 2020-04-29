@@ -43,6 +43,7 @@ const SignInForm = props => {
         client.writeData({ data: { token: data.login.token } })
       },
       onError(error) {
+        console.log(error)
         setSignIn({...signIn, ["error"]: "Wrong Email/Password"})
       }
     }

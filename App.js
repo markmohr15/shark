@@ -27,17 +27,11 @@ const GET_TOKEN = gql`
 `;
 
 const App = props => {  
- // const retrieveToken = async () => {
-   // const token = await AsyncStorage.getItem('sharkToken')
-    //setShark({...shark, ["sharkToken"]: token })
-  //}
-
   return(
     <ApolloProvider client={client}>
       <Shark/>
     </ApolloProvider>
   ) 
-  
 }
 
 const Shark = () => {
@@ -58,7 +52,7 @@ const Shark = () => {
     ); 
   }
 
-  if (!data || !data.token) {
+  if (!data.token) {
     return (
       <SignIn/>
     )

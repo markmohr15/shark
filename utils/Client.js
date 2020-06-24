@@ -8,7 +8,7 @@ import { useQuery } from '@apollo/react-hooks';
 const cache = new InMemoryCache();
 
 const httpLink = createHttpLink({
-  uri: 'http://d4a9a992.ngrok.io/graphql',
+  uri: 'http://3b8e61ff1be3.ngrok.io/graphql',
 });
 
 const GET_TOKEN = gql`
@@ -19,7 +19,6 @@ const GET_TOKEN = gql`
 
 const authLink = setContext((_, { headers }) => {
   const data = cache.readQuery({query: GET_TOKEN});
-  console.log(data.token)
   return {
     headers: {
       authorization: data.token ? `Bearer ${data.token}` : "",
@@ -36,6 +35,7 @@ export const client = new ApolloClient({
 cache.writeData({
   data: {
     token: '',
+    sports: '',
   }
 })
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, AsyncStorage } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Button, Text, Input, ThemeProvider } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { gql } from "apollo-boost";
@@ -56,7 +56,7 @@ const SignInForm = props => {
   return (
     <>
       {signIn.error ?
-        <Text style={styles.error}> {signIn.error} </Text>
+        <Text style={styles.error}>{signIn.error}</Text>
         : <React.Fragment></React.Fragment>
       }
       <Input

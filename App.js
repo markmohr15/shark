@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Image, StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
-import TriggerScreen from './screens/TriggerScreen';
+import TriggersScreen from './screens/TriggersScreen';
+import TriggerFormScreen from './screens/TriggerFormScreen';
+import SearchScreen from './screens/SearchScreen';
+import SignOut from './components/SignOut';
 import { AppLoading } from 'expo';
 import { client } from './utils/Client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,6 +31,16 @@ const GET_TOKEN = gql`
   }
 `;
 
+const GET_SPORTS = gql`
+  query allSports {
+    allSports {
+      id
+      abbreviation
+      name
+    }
+  }        
+`;
+
 const App = props => {  
   return(
     <ApolloProvider client={client}>
@@ -39,29 +54,32 @@ const Shark = () => {
     isReady: false,
   })
 
+  const getSports = async () => {
+    const sports = await client.query({
+      query: GET_SPORTS,
+    })
+    client.writeData({data: {sports: sports.data.allSports}})
+  }
+
   const { data, client } = useQuery(GET_TOKEN);
-  console.log('')
 
   if (!shark.isReady) {
     return (
       <AppLoading
-        startAsync={console.log('loading')}
-        onFinish={setShark({...shark, ["isReady"]: true })}
+        startAsync={getSports()}
+        onFinish={setShark({["isReady"]: true })}
         onError={console.warn}
       />
     ); 
-  }
-
-  if (!data.token) {
+  } else if (data.token) {
     return (
-      <SignIn/>
+      <Root/>
     )
   } else {
     return (      
-      <Application/>
+      <SignIn/>
     )
   }
-
 }
 
 function SignIn() {
@@ -75,17 +93,52 @@ function SignIn() {
   )
 }
 
-function Application() {
+function Root(props) {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Schedule" component={ScheduleScreen} />
-        <Stack.Screen name="Triggers" component={TriggerScreen} />
-      </Stack.Navigator>
+      <RootStack.Navigator mode="modal">
+        <RootStack.Screen name="Application"
+                          component={Application}
+                          options={{ headerShown: false }}
+        />
+        <RootStack.Screen name="Trigger Form" 
+                          component={TriggerFormScreen}
+                          options={{headerBackTitleVisible: false}} />
+      </RootStack.Navigator>
     </NavigationContainer>
+  );
+}
+
+const Application = (navigation) => {
+  const sports = client.readQuery({query: GET_SPORTS}).allSports
+  
+  const today = () => {
+    return moment(new Date()).format('YYYY-MM-DD')
+  }
+
+  return (
+    <Drawer.Navigator initialRouteName="Triggers">
+      {sports.map((sport) => (
+        <Drawer.Screen name={sport.abbreviation} 
+                       component={ScheduleScreen}
+                       key={sport.id} 
+                       initialParams={{sportId: sport.id, 
+                                       abbreviation: sport.abbreviation,
+                                       date: today()}} />    
+      ))}
+      <Drawer.Screen name="Triggers" 
+                     component={TriggersScreen}
+                     initialParams={{sportId: '', 
+                                     status: 'Open',
+                                     date: today()}} />    
+      <Drawer.Screen name="Search" component={SearchScreen} />
+      <Drawer.Screen name="Sign Out" component={SignOut} />
+    </Drawer.Navigator>
   )
 }
 
 const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+const RootStack = createStackNavigator();
 
 export default App;

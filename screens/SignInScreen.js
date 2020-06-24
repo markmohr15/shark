@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import { Button, Image, ThemeProvider } from 'react-native-elements';
 import SignInForm from '../components/SignInForm';
-import shark from '../assets/shankpng.png';
+import shark from '../assets/black-shark.png';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +30,10 @@ const styles = StyleSheet.create({
 
 function SignInScreen({ navigation }) {
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <View style={styles.logoContainer}>
         <Image style={styles.logo}
                source={shark}
@@ -45,7 +48,7 @@ function SignInScreen({ navigation }) {
                 buttonStyle="raised"
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

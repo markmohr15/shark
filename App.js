@@ -15,6 +15,10 @@ import { client } from './utils/Client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import moment from 'moment';
+import * as TaskManager from 'expo-task-manager';
+import * as BackgroundFetch from 'expo-background-fetch';
+
+const FETCH_TRIGGERED = 'background-fetch';
 
 const styles = StyleSheet.create({
   container: {
@@ -41,6 +45,49 @@ const GET_SPORTS = gql`
   }        
 `;
 
+const GET_TRIGGERED = gql`
+  query triggerNotifications {
+    triggerNotifications {
+      id
+      operator
+      target
+      wagerType
+      gametime
+      displayTarget
+      game {
+        id
+        visitor {
+          id
+          shortDisplayName
+        }
+        home {
+          id
+          shortDisplayName
+        }
+      }
+      team {
+        id
+        shortDisplayName
+      }
+    }
+  }        
+`;
+
+TaskManager.defineTask(FETCH_TRIGGERED, async () => {
+  try {
+    console.log('fetching....')
+    const triggered = await client.query({
+      query: GET_TRIGGERED,
+      fetchPolicy: "network-only"
+    })
+    console.log(triggered)
+    return BackgroundFetch.Result.NewData;
+    //return receivedNewData ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
+  } catch (error) {
+    return BackgroundFetch.Result.Failed;
+  }
+});
+
 const App = props => {  
   return(
     <ApolloProvider client={client}>
@@ -63,6 +110,14 @@ const Shark = () => {
 
   const { data, client } = useQuery(GET_TOKEN);
 
+  const startFetchTriggered = async () => {
+    await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
+        minimumInterval: 11, // 1 minute
+        stopOnTerminate: false,
+        startOnBoot: true,
+    });
+  }
+
   if (!shark.isReady) {
     return (
       <AppLoading
@@ -72,6 +127,7 @@ const Shark = () => {
       />
     ); 
   } else if (data.token) {
+    startFetchTriggered()
     return (
       <Root/>
     )

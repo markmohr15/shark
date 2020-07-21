@@ -4,7 +4,6 @@ import { Button, Input, Text, Header, ThemeProvider } from 'react-native-element
 import { client } from '../utils/Client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
-import { Query } from '@apollo/react-components';
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';
 import BottomNav from '../components/BottomNav';

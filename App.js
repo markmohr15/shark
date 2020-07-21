@@ -75,11 +75,11 @@ const GET_TRIGGERED = gql`
 
 TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
-    console.log('fetching....')
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
+    console.log('just background fetched')
     console.log(triggered)
     return BackgroundFetch.Result.NewData;
     //return receivedNewData ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
@@ -108,15 +108,25 @@ const Shark = () => {
     client.writeData({data: {sports: sports.data.allSports}})
   }
 
-  const { data, client } = useQuery(GET_TOKEN);
-
-  const startFetchTriggered = async () => {
+  const backgroundFetchTriggered = async () => {
     await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
-        minimumInterval: 11, // 1 minute
+        minimumInterval: 30,
         stopOnTerminate: false,
         startOnBoot: true,
     });
   }
+
+  const fetchTriggered = async () => {
+    const triggered = await client.query({
+      query: GET_TRIGGERED,
+      fetchPolicy: "network-only"
+    })
+    console.log(triggered)
+    console.log('just fetched')
+    setTimeout(fetchTriggered, 30000)
+  }
+
+  const { data, client } = useQuery(GET_TOKEN);
 
   if (!shark.isReady) {
     return (
@@ -127,7 +137,8 @@ const Shark = () => {
       />
     ); 
   } else if (data.token) {
-    startFetchTriggered()
+    backgroundFetchTriggered()
+    fetchTriggered()
     return (
       <Root/>
     )
@@ -196,5 +207,7 @@ const Application = (navigation) => {
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
+
+
 
 export default App;

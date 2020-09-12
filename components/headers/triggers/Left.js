@@ -6,7 +6,7 @@ import { client } from '../../../utils/Client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import RNPickerSelect, { defaultStyles} from 'react-native-picker-select';
-import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
+import { headerPickerSelectStyles, pickerSelectStyles } from '../../../styles/PickerSelectStyles';
 
 const GET_SPORTS = gql`
   query allSports {

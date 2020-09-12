@@ -17,7 +17,7 @@ export const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 0.5,
-    borderColor: 'purple',
+    borderColor: 'gray',
     borderRadius: 8,
     color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
@@ -40,14 +40,14 @@ export const headerPickerSelectStyles = StyleSheet.create({
   },
   inputAndroid: {
     textAlign: 'center',
-    fontSize: 8,
+    fontSize: 12,
+    paddingVertical: 10,
     paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
+    borderWidth: 1,
+    borderColor: 'gray',
     borderRadius: 8,
-    color: 'white',
-    paddingRight: 30, // to ensure the text is never behind the icon
-    marginBottom: 15,
+    color: 'black',
+    paddingRight: 10, // to ensure the text is never behind the icon
+    marginBottom: 0,
   },
 });

@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const MlbDisplayGame = props => {
+const DisplayGame = props => {
 
   return (
     <View style={styles.game}>
@@ -127,4 +127,4 @@ const MlbDisplayGame = props => {
 
 }
 
-export default MlbDisplayGame;
+export default DisplayGame;

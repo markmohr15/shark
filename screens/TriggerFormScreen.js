@@ -1,14 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import TriggerForm from '../components/TriggerForm';
-import MlbDisplayGame from '../components/MlbDisplayGame';
+import DisplayGame from '../components/DisplayGame';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    paddingVertical: 2,
+    paddingHorizontal: 2,
     backgroundColor: "black",
   },
   game: {
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 8,
-    paddingTop: 20,
+    paddingTop: 5,
   },
   header: {
     color: "white",
@@ -26,20 +26,25 @@ const styles = StyleSheet.create({
 
 const TriggerFormScreen = ({ route, navigation }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.game}>
-        <MlbDisplayGame game={route.params.game} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <View style={styles.container}>
+        <View style={styles.game}>
+          <DisplayGame game={route.params.game} />
+        </View>
+        <View style={styles.form}>
+          <TriggerForm game={route.params.game}
+                       teamId={route.params.teamId}
+                       wagerType={route.params.wagerType}
+                       operator={route.params.operator}
+                       target={route.params.target} 
+                       triggerId={route.params.triggerId}
+          />
+        </View>
       </View>
-      <View style={styles.form}>
-        <TriggerForm game={route.params.game}
-                     teamId={route.params.teamId}
-                     wagerType={route.params.wagerType}
-                     operator={route.params.operator}
-                     target={route.params.target} 
-                     triggerId={route.params.triggerId}
-        />
-      </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

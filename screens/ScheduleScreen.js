@@ -10,7 +10,7 @@ import BottomNav from '../components/BottomNav';
 import SharkText from '../components/SharkText';
 import CenterHeader from '../components/headers/schedule/Center';
 import LeftHeader from '../components/headers/schedule/Left';
-import MlbGame from '../components/MlbGame';
+import Game from '../components/Game';
 
 const styles = StyleSheet.create({
   container: {
@@ -43,6 +43,9 @@ const GET_GAMES_BY_SPORT_AND_DATE = gql`
       status
       displayTime
       channel
+      sport {
+        abbreviation
+      }
       home {
         id
         name
@@ -99,14 +102,14 @@ const ScheduleScreen = ({ route, navigation }) => {
         />
         {data.gamesBySportAndDate.length == 0 ? 
           <View style={styles.none}>
-            <SharkText>No Games Scheduled</SharkText>
+            <SharkText>No Open Games</SharkText>
           </View>
         :  
           <ScrollView> 
             {data.gamesBySportAndDate.map(game => (
-              <MlbGame key={game.id}
-                       game={game} 
-                       navigation={navigation} />
+              <Game key={game.id}
+                    game={game} 
+                    navigation={navigation} />
             ))}
           </ScrollView>
         }

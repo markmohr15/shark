@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View, Platform } from 'react-native';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
@@ -17,6 +17,9 @@ import { gql } from "apollo-boost";
 import moment from 'moment';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
 
 const FETCH_TRIGGERED = 'background-fetch';
 
@@ -56,6 +59,7 @@ const GET_TRIGGERED = gql`
       displayTarget
       game {
         id
+        displayTime
         visitor {
           id
           shortDisplayName
@@ -73,22 +77,42 @@ const GET_TRIGGERED = gql`
   }        
 `;
 
-TaskManager.defineTask(FETCH_TRIGGERED, async () => {
+TaskManager.defineTask(FETCH_TRIGGERED, async (expoPushToken) => {
   try {
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    console.log('just background fetched')
-    console.log(triggered)
-    return BackgroundFetch.Result.NewData;
-    //return receivedNewData ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
+    console.log('inside task mgr')
+    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
+    return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
   } catch (error) {
     return BackgroundFetch.Result.Failed;
   }
 });
 
-const App = props => {  
+async function parseTrigger(trigger, expoPushToken) {
+  console.log('inside parseTrigger')
+  if (trigger.wagerType == "total") {
+    await sendPushNotificationForTotal(expoPushToken, trigger.operator, trigger.displayTarget,
+                                 trigger.game.displayTime, trigger.game.visitor.shortDisplayName,
+                                 trigger.game.home.shortDisplayName);
+  } else {
+    await sendPushNotification(expoPushToken, trigger.operator, trigger.displayTarget,
+                         trigger.game.displayTime, trigger.game.visitor.shortDisplayName,
+                         trigger.game.home.shortDisplayName, trigger.team.shortDisplayName);
+  }
+}
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+const App = props => {
   return(
     <ApolloProvider client={client}>
       <Shark/>
@@ -101,6 +125,28 @@ const Shark = () => {
     isReady: false,
   })
 
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  }, []);
+
   const getSports = async () => {
     const sports = await client.query({
       query: GET_SPORTS,
@@ -108,7 +154,7 @@ const Shark = () => {
     client.writeData({data: {sports: sports.data.allSports}})
   }
 
-  const backgroundFetchTriggered = async () => {
+  const backgroundFetchTriggered = async (expoPushToken) => {
     await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
         minimumInterval: 30,
         stopOnTerminate: false,
@@ -117,13 +163,14 @@ const Shark = () => {
   }
 
   const fetchTriggered = async () => {
-    const triggered = await client.query({
-      query: GET_TRIGGERED,
-      fetchPolicy: "network-only"
-    })
-    console.log(triggered)
-    console.log('just fetched')
-    setTimeout(fetchTriggered, 30000)
+    //const triggered = await client.query({
+      //query: GET_TRIGGERED,
+      //fetchPolicy: "network-only"
+    //})
+      //  console.log('inside fetchTriggered ' + expoPushToken)
+
+    //triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
+    //setTimeout(fetchTriggered, 30000)
   }
 
   const { data, client } = useQuery(GET_TOKEN);
@@ -137,7 +184,7 @@ const Shark = () => {
       />
     ); 
   } else if (data.token) {
-    backgroundFetchTriggered()
+    backgroundFetchTriggered(expoPushToken)
     fetchTriggered()
     return (
       <Root/>
@@ -208,6 +255,77 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
 
+async function sendPushNotification(expoPushToken, operator, displayTarget,
+                                    gametime, visitorShortDisplayName,
+                                    homeShortDisplayName, teamShortDisplayName) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: `${teamShortDisplayName} ${operator} ${displayTarget} triggered`,
+    body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gametime}`,
+  };
 
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
+async function sendPushNotificationForTotal(expoPushToken, operator, displayTarget,
+                                            gametime, visitorShortDisplayName,
+                                            homeShortDisplayName) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: `${operator} ${displayTarget} triggered`,
+    body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gametime}`,
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
 
 export default App;

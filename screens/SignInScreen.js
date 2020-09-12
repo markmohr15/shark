@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
-import { Button, Image, ThemeProvider } from 'react-native-elements';
+import { Button, StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { Image, ThemeProvider } from 'react-native-elements';
 import SignInForm from '../components/SignInForm';
 import shark from '../assets/black-shark.png';
 
@@ -44,7 +44,7 @@ function SignInScreen({ navigation }) {
       </View>
       <View style={styles.signUp}>
         <Button title="SIGN UP"
-                onPress={() => navigation.navigate('Sign Up')}
+                onPress={() => console.log('ppp')}
                 buttonStyle="raised"
         />
       </View>

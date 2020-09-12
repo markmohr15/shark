@@ -17,18 +17,25 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 8,
   },
   success: {
     backgroundColor: "green",
-    padding: 10,
-    marginBottom: 10,
+    padding: 0,
+    marginBottom: 5,
     textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 8,
   },
   placeholder: {
     padding: 10,
     marginBottom: 10,
+  },
+  submit: {
+    paddingTop: 10
   }
 });
 
@@ -59,6 +66,29 @@ const TriggerForm = props => {
     error: '',
     success: ''
   })
+
+  const wagerTypes = () => {
+    const abbrev = props.game.sport.abbreviation
+    if (abbrev == "NHL") {
+      return [
+              { label: 'Total', value: 'total' },
+              { label: 'Moneyline', value: 'moneyline' },
+              { label: 'Puckline', value: 'runline'} 
+             ]
+    } else if (["KBO", "NPB", "MLB"].includes(abbrev)) {
+      return [
+              { label: 'Total', value: 'total' },
+              { label: 'Moneyline', value: 'moneyline' },
+              { label: 'Runline', value: 'runline'} 
+             ]
+    } else {
+      return [
+              { label: 'Total', value: 'total' },
+              { label: 'Moneyline', value: 'moneyline' },
+              { label: 'Spread', value: 'spread'} 
+             ]
+    }
+  }
 
   const [createTrigger] = useMutation(CREATE_TRIGGER,
     {
@@ -154,12 +184,7 @@ const TriggerForm = props => {
                                                   ["success"]: '',
                                                   ["error"]: ''})
                         }
-                        items={[
-                          // add back for non MLB and maybe non NHL{ label: 'Spread', value: 0 },
-                          { label: 'Total', value: 'total' },
-                          { label: 'Moneyline', value: 'moneyline' },
-                          { label: 'Runline', value: 'runline'} //remove for non MLB.  maybe change to Puckline for NHL
-                        ]}
+                        items={wagerTypes()}
         />
       </View>
       <View>
@@ -189,12 +214,13 @@ const TriggerForm = props => {
                                             : 'decimal-pad'}
         numeric
       />
-      
-      <Button
-        title={props.triggerId ? "UPDATE" : "CREATE"}
-        buttonStyle="raised"
-        onPress={event => submit()}
-      />
+      <View style={styles.submit}>
+        <Button
+          title={props.triggerId ? "UPDATE" : "CREATE"}
+          buttonStyle="raised"
+          onPress={event => submit()}
+        />
+      </View>
     </>
   )
 

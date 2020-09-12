@@ -27,24 +27,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   moneyline: {
-    flex: 0.7,
-    alignItems: 'flex-end',
-  },
-  total: {
     flex: 1,
     alignItems: 'flex-end',
   },
+  total: {
+    flex: 1.3,
+    alignItems: 'flex-end',
+  },
   runline: {
-    flex: 2,
+    flex: 2.5,
     flexDirection: 'row',
   },
   spread: {
-    flex: 2.5,
+    flex: 2,
     alignItems: 'flex-end',
   },
   line: {
     flex: 1,
     alignItems: 'flex-end',
+    paddingRight: 5,
   },
   buttonText: {
     fontSize: 14,
@@ -58,13 +59,21 @@ const styles = StyleSheet.create({
   }
 })
 
-const MlbGame = props => {
+const Game = props => {
 
   const goToTrigger = (teamId, wagerType, operator) => {
     props.navigation.navigate("Trigger Form", {game: props.game,
                                                teamId: teamId,
                                                wagerType: wagerType,
                                                operator: operator})
+  }
+
+  const spreadOrRunline = () => {
+    if (["MLB", "KBO", "NPB", "NHL"].includes(props.game.sport.abbreviation)) {
+      return "runline"
+    } else {
+      return "spread"
+    }
   }
 
   return (
@@ -104,7 +113,7 @@ const MlbGame = props => {
             {props.game.displayVisitorSpread ?
               <Button title={props.game.displayVisitorSpread}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.visitor.id, 'runline', 'greater_eq')} 
+                      onPress={event => goToTrigger(props.game.visitor.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/>            
               : <React.Fragment/>
@@ -114,7 +123,7 @@ const MlbGame = props => {
             {props.game.displayVisitorRl ?
               <Button title={props.game.displayVisitorRl}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.visitor.id, 'runline', 'greater_eq')} 
+                      onPress={event => goToTrigger(props.game.visitor.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/>    
               : <React.Fragment/>
@@ -157,7 +166,7 @@ const MlbGame = props => {
             {props.game.displayHomeSpread ?
               <Button title={props.game.displayHomeSpread}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.home.id, 'runline', 'greater_eq')} 
+                      onPress={event => goToTrigger(props.game.home.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/> 
               : <React.Fragment/>
@@ -167,7 +176,7 @@ const MlbGame = props => {
             {props.game.displayHomeRl ?
               <Button title={props.game.displayHomeRl}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.home.id, 'runline', 'greater_eq')} 
+                      onPress={event => goToTrigger(props.game.home.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/> 
               : <React.Fragment/>
@@ -180,4 +189,4 @@ const MlbGame = props => {
 
 }
 
-export default MlbGame;
+export default Game;

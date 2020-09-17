@@ -6,7 +6,7 @@ export const pickerSelectStyles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: 'white',
     borderRadius: 8,
     color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
@@ -17,12 +17,14 @@ export const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 0.5,
-    borderColor: 'gray',
+    borderColor: 'white',
     borderRadius: 8,
     color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
     marginBottom: 15,
+    marginTop: 14,
   },
+   
 });
 
 export const headerPickerSelectStyles = StyleSheet.create({
@@ -44,7 +46,7 @@ export const headerPickerSelectStyles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: 'black',
     borderRadius: 8,
     color: 'black',
     paddingRight: 10, // to ensure the text is never behind the icon

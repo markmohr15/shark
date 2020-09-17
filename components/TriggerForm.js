@@ -190,7 +190,7 @@ const TriggerForm = props => {
       <View>
         <SharkText>Direction</SharkText>
         <RNPickerSelect value={trigger.operator}
-                        style={pickerSelectStyles}
+                        
                         onValueChange={(value) =>
                           setTrigger({...trigger, ["operator"]: value,
                                                   ["success"]: '',

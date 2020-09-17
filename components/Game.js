@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   info: {
-    flex: 0.85,
+    flex: 1,
   },
   rotation: {
     flex: 0.6,

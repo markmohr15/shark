@@ -13,9 +13,6 @@ import LeftHeader from '../components/headers/triggers/Left';
 import CenterHeader from '../components/headers/triggers/Center';
 import RightHeader from '../components/headers/triggers/Right';
 import Trigger from '../components/Trigger';
-import RNPickerSelect, { defaultStyles} from 'react-native-picker-select';
-import { headerPickerSelectStyles, pickerSelectStyles } from '../styles/PickerSelectStyles';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -144,28 +141,11 @@ const TriggersScreen = ({ route, navigation }) => {
                                        date={date} 
                                        navigation={navigation} /> }
           containerStyle={{backgroundColor: 'white', justifyContent: 'space-around'}}
-          centerContainerStyle={{justifyContent: 'space-around'}}
+          centerContainerStyle={{justifyContent: 'space-around', flex: 2.5}}
         />
         {data.triggers.length == 0 ? 
           <View style={styles.none}>
-            <RNPickerSelect value={'red'}
-                    style={pickerSelectStyles}
-                    onValueChange={(value) => console.log(value)}
-                    items={[
-                {
-                    label: 'Red',
-                    value: 'red',
-                },
-                {
-                    label: 'Orange',
-                    value: 'orange',
-                },
-                {
-                    label: 'Blue',
-                    value: 'blue',
-                },
-            ]}
-    />
+            <SharkText>No Triggers Found</SharkText>
           </View>
         :
           <React.Fragment>

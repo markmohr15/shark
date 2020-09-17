@@ -83,7 +83,6 @@ TaskManager.defineTask(FETCH_TRIGGERED, async (expoPushToken) => {
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    console.log('inside task mgr')
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
     return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
   } catch (error) {
@@ -163,14 +162,15 @@ const Shark = () => {
   }
 
   const fetchTriggered = async () => {
-    //const triggered = await client.query({
-      //query: GET_TRIGGERED,
-      //fetchPolicy: "network-only"
-    //})
-      //  console.log('inside fetchTriggered ' + expoPushToken)
+    const triggered = await client.query({
+      query: GET_TRIGGERED,
+      fetchPolicy: "network-only"
+    })
+    
+    console.log('inside fetchTriggered ' + expoPushToken)
 
-    //triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
-    //setTimeout(fetchTriggered, 30000)
+    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
+    setTimeout(fetchTriggered, 30000)
   }
 
   const { data, client } = useQuery(GET_TOKEN);

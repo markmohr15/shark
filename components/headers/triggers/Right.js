@@ -12,6 +12,7 @@ const Right = props => {
   return (
     <RNPickerSelect value={right.status}
                     style={headerPickerSelectStyles}
+                    useNativeAndroidPickerStyle={false}
                     onClose={() =>
                       props.navigation.navigate('Triggers',
                       {sportId: props.sportId,

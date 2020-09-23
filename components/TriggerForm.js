@@ -120,6 +120,15 @@ const TriggerForm = props => {
     if (!trigger.target) {
       setTrigger({...trigger, ["error"]: 'Target cannot be blank',
                               ["success"]: ''})
+    } else if (!trigger.operator) {
+      setTrigger({...trigger, ["error"]: 'Direction cannot be blank',
+                              ["success"]: ''})
+    } else if (!trigger.wagerType) {
+      setTrigger({...trigger, ["error"]: 'Wager Type cannot be blank',
+                              ["success"]: ''})
+    } else if (!trigger.teamId && trigger.wagerType != "total") {
+      setTrigger({...trigger, ["error"]: 'Team cannot be blank',
+                              ["success"]: ''})
     } else if (props.triggerId) {
       updateTrigger({ variables: { id: parseInt(props.triggerId), 
                                    teamId: parseInt(trigger.teamId),

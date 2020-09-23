@@ -1,13 +1,22 @@
 {
   "expo": {
-    "name": "shark",
-    "slug": "shark",
+    "name": "Shark SB",
+    "description": "Track line changes",
+    "slug": "shark-sb",
+    "sdkVersion": "38.0.2",
+    "backgroundColor": "#000000",
+    "primaryColor": "#000000",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "0.0.1",
+    "android": {
+      "package": "shark-sb",
+      "versionCode": 1,
+
+    },
     "orientation": "portrait",
     "icon": "./assets/shark.png",
     "splash": {
@@ -19,7 +28,7 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/images/*"
     ],
     "ios": {
       "supportsTablet": true

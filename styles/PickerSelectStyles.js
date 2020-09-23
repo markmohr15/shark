@@ -22,7 +22,6 @@ export const pickerSelectStyles = StyleSheet.create({
     color: 'white',
     paddingRight: 30, // to ensure the text is never behind the icon
     marginBottom: 15,
-    marginTop: 14,
   },
    
 });

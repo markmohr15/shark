@@ -6,7 +6,7 @@ import { client } from '../../../utils/Client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import RNPickerSelect, { defaultStyles} from 'react-native-picker-select';
-import { headerPickerSelectStyles, pickerSelectStyles } from '../../../styles/PickerSelectStyles';
+import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
 
 const GET_SPORTS = gql`
   query allSports {
@@ -29,19 +29,30 @@ const Left = props => {
     sports.forEach((sport) => list.push({label: sport.abbreviation, value: sport.id}))
     return list
   }
-    
+
+  const select = (value) => {
+    if(Platform.OS === 'android') {
+      submit(value)
+    } else {
+      setLeft({...left, ["sportId"]: value})
+    }
+  }
+
+  const submit = (sportId) => {
+    props.navigation.navigate('Triggers',
+                      {sportId: sportId,
+                       status: props.status,
+                       date: props.date
+                      })
+  }
+
   return (
     <RNPickerSelect value={left.sportId}
                     style={headerPickerSelectStyles}
                     useNativeAndroidPickerStyle={false}
-                    onClose={() => props.navigation.navigate('Triggers',
-                      {sportId: left.sportId,
-                       status: props.status,
-                       date: props.date
-                      })
-                    }
+                    onClose={() => submit(left.sportId)}
                     onValueChange={(value) =>
-                      setLeft({...left, ["sportId"]: value})
+                      select(value)
                     }
                     items={sportList()}
     />

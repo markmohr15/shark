@@ -161,6 +161,11 @@ const TriggerForm = props => {
           <SharkText>Team</SharkText>
           <RNPickerSelect value={trigger.teamId}
                           style={pickerSelectStyles}
+                          useNativeAndroidPickerStyle={false}
+                          placeholder={{
+                            label: "Select a Team",
+                            value: null,
+                          }}
                           onValueChange={(value) =>
                             setTrigger({...trigger, ["teamId"]: value,
                                                     ["success"]: '',
@@ -177,8 +182,8 @@ const TriggerForm = props => {
       <View>
         <SharkText>Wager Type</SharkText>
         <RNPickerSelect value={trigger.wagerType}
-                        InputAccessoryView={() => null}
                         style={pickerSelectStyles}
+                        useNativeAndroidPickerStyle={false}
                         onValueChange={(value) =>
                           setTrigger({...trigger, ["wagerType"]: value,
                                                   ["success"]: '',
@@ -190,7 +195,12 @@ const TriggerForm = props => {
       <View>
         <SharkText>Direction</SharkText>
         <RNPickerSelect value={trigger.operator}
-                        
+                        style={pickerSelectStyles}
+                        placeholder={{
+                          label: "Select a Direction",
+                          value: null,
+                        }}
+                        useNativeAndroidPickerStyle={false}
                         onValueChange={(value) =>
                           setTrigger({...trigger, ["operator"]: value,
                                                   ["success"]: '',

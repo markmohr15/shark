@@ -8,7 +8,8 @@ import { useQuery } from '@apollo/react-hooks';
 const cache = new InMemoryCache();
 
 const httpLink = createHttpLink({
-  uri: 'http://ace8f72c29d8.ngrok.io/graphql',
+  uri: 'https://sharksb-api.herokuapp.com/graphql',
+  //uri: 'http://ace8f72c29d8.ngrok.io/graphql',
 });
 
 const GET_TOKEN = gql`

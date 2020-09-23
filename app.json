@@ -9,7 +9,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/shark.png",
     "splash": {
       "image": "./assets/shark.png",
       "resizeMode": "contain",

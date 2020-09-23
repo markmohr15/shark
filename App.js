@@ -60,6 +60,7 @@ const GET_TRIGGERED = gql`
       game {
         id
         displayTime
+        displayDate
         visitor {
           id
           shortDisplayName
@@ -77,13 +78,14 @@ const GET_TRIGGERED = gql`
   }        
 `;
 
-TaskManager.defineTask(FETCH_TRIGGERED, async (expoPushToken) => {
+TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
+    const options = await TaskManager.getTaskOptionsAsync(FETCH_TRIGGERED)
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
+    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, options.expoPushToken));
     return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
   } catch (error) {
     return BackgroundFetch.Result.Failed;
@@ -91,22 +93,23 @@ TaskManager.defineTask(FETCH_TRIGGERED, async (expoPushToken) => {
 });
 
 async function parseTrigger(trigger, expoPushToken) {
-  console.log('inside parseTrigger')
+  const game = trigger.game
   if (trigger.wagerType == "total") {
-    await sendPushNotificationForTotal(expoPushToken, trigger.operator, trigger.displayTarget,
-                                 trigger.game.displayTime, trigger.game.visitor.shortDisplayName,
-                                 trigger.game.home.shortDisplayName);
+    await sendPushNotificationForTotal(expoPushToken, trigger.operator, trigger.wagerType, 
+                                       trigger.displayTarget, game.displayTime, game.displayDate, 
+                                       game.visitor.shortDisplayName, game.home.shortDisplayName);
   } else {
-    await sendPushNotification(expoPushToken, trigger.operator, trigger.displayTarget,
-                         trigger.game.displayTime, trigger.game.visitor.shortDisplayName,
-                         trigger.game.home.shortDisplayName, trigger.team.shortDisplayName);
+    await sendPushNotification(expoPushToken, trigger.operator, trigger.wagerType, 
+                               trigger.displayTarget, game.displayTime, game.displayDate, 
+                               game.visitor.shortDisplayName, game.home.shortDisplayName, 
+                               trigger.team.shortDisplayName);
   }
 }
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
   }),
 });
@@ -155,9 +158,10 @@ const Shark = () => {
 
   const backgroundFetchTriggered = async (expoPushToken) => {
     await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
-        minimumInterval: 30,
+        minimumInterval: 5,
         stopOnTerminate: false,
         startOnBoot: true,
+        expoPushToken: expoPushToken
     });
   }
 
@@ -165,10 +169,7 @@ const Shark = () => {
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
-    })
-    
-    console.log('inside fetchTriggered ' + expoPushToken)
-
+    })    
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
     setTimeout(fetchTriggered, 30000)
   }
@@ -255,16 +256,31 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const RootStack = createStackNavigator();
 
-async function sendPushNotification(expoPushToken, operator, displayTarget,
-                                    gametime, visitorShortDisplayName,
+const displayOperator = (operator, wagerType) => {
+  if (wagerType == "total") {
+    if (operator == "greater_eq") {
+      return "Greater Than or Equal to"
+    } else {
+      return "Less Than or Equal to"
+    }
+  } else {
+    if (operator == "greater_eq") {
+      return "or Better"
+    } else {
+      return "or Worse"
+    }
+  }
+}
+
+async function sendPushNotification(expoPushToken, operator, wagerType, displayTarget,
+                                    gameTime, gameDate, visitorShortDisplayName,
                                     homeShortDisplayName, teamShortDisplayName) {
   const message = {
     to: expoPushToken,
     sound: 'default',
-    title: `${teamShortDisplayName} ${operator} ${displayTarget} triggered`,
-    body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gametime}`,
+    title: `${teamShortDisplayName} ${displayTarget} ${displayOperator(operator, wagerType)} triggered`,
+    body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gameTime} on ${gameDate}`,
   };
-
   await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
     headers: {
@@ -276,16 +292,15 @@ async function sendPushNotification(expoPushToken, operator, displayTarget,
   });
 }
 
-async function sendPushNotificationForTotal(expoPushToken, operator, displayTarget,
-                                            gametime, visitorShortDisplayName,
+async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, displayTarget,
+                                            gameTime, gameDate, visitorShortDisplayName,
                                             homeShortDisplayName) {
   const message = {
     to: expoPushToken,
     sound: 'default',
-    title: `${operator} ${displayTarget} triggered`,
-    body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gametime}`,
+    title: `${displayOperator(operator, wagerType)} ${displayTarget} triggered`,
+    body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gameTime} on ${gameDate}`,
   };
-
   await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
     headers: {
@@ -308,10 +323,10 @@ async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== 'granted') {
       alert('Failed to get push token for push notification!');
+      console.log('Failed to get push token for push notification!')
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
   } else {
     alert('Must use physical device for Push Notifications');
   }

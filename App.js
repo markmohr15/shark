@@ -132,11 +132,23 @@ const Shark = () => {
 
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
+  const [notificationAllowed, setNotificationAllowed] = useState(false)
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  useEffect(() => {
+  const allowsNotificationsAsync = async () => {
+    const settings = await Notifications.getPermissionsAsync();
+    return (
+      settings.granted || settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
+    );
+  }
+
+  useEffect(async () => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    if (await allowsNotificationsAsync()) {
+      setNotificationAllowed(true)
+    }
 
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
@@ -168,6 +180,21 @@ const Shark = () => {
     });
   }
 
+  const requestPermissionsAsync = async () => {
+    const rpa = await Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+        allowAnnouncements: true,
+      },
+    })
+    if (await allowsNotificationsAsync()) {
+      setNotificationAllowed(true)
+    }
+    return rpa
+  }
+
   const fetchTriggered = async () => {
     console.log('FETCHFETCHFETCH')
     const triggered = await client.query({
@@ -188,7 +215,10 @@ const Shark = () => {
         onFinish={setShark({["isReady"]: true })}
         onError={console.warn}
       />
-    ); 
+    )
+  } else if (!notificationAllowed) {
+    requestPermissionsAsync()
+    return null
   } else if (data.token) {
     backgroundFetchTriggered(expoPushToken)
     fetchTriggered()

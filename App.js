@@ -57,6 +57,7 @@ const GET_TRIGGERED = gql`
       wagerType
       gametime
       displayTarget
+      updatedAt
       game {
         id
         displayTime
@@ -80,6 +81,7 @@ const GET_TRIGGERED = gql`
 
 TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
+    console.log('TASKTASKTASK')
     const options = await TaskManager.getTaskOptionsAsync(FETCH_TRIGGERED)
     const triggered = await client.query({
       query: GET_TRIGGERED,
@@ -97,12 +99,13 @@ async function parseTrigger(trigger, expoPushToken) {
   if (trigger.wagerType == "total") {
     await sendPushNotificationForTotal(expoPushToken, trigger.operator, trigger.wagerType, 
                                        trigger.displayTarget, game.displayTime, game.displayDate, 
-                                       game.visitor.shortDisplayName, game.home.shortDisplayName);
+                                       game.visitor.shortDisplayName, game.home.shortDisplayName,
+                                       trigger.updatedAt);
   } else {
     await sendPushNotification(expoPushToken, trigger.operator, trigger.wagerType, 
                                trigger.displayTarget, game.displayTime, game.displayDate, 
                                game.visitor.shortDisplayName, game.home.shortDisplayName, 
-                               trigger.team.shortDisplayName);
+                               trigger.team.shortDisplayName, trigger.updatedAt);
   }
 }
 
@@ -166,10 +169,12 @@ const Shark = () => {
   }
 
   const fetchTriggered = async () => {
+    console.log('FETCHFETCHFETCH')
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
-    })    
+    })
+    console.log(triggered.data.triggerNotifications.length)
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
     setTimeout(fetchTriggered, 30000)
   }
@@ -274,12 +279,15 @@ const displayOperator = (operator, wagerType) => {
 
 async function sendPushNotification(expoPushToken, operator, wagerType, displayTarget,
                                     gameTime, gameDate, visitorShortDisplayName,
-                                    homeShortDisplayName, teamShortDisplayName) {
+                                    homeShortDisplayName, teamShortDisplayName, updatedAt) {
+  console.log("SENDPUSHSENDPUSH")
+  console.log(expoPushToken)
   const message = {
     to: expoPushToken,
     sound: 'default',
     title: `${teamShortDisplayName} ${displayTarget} ${displayOperator(operator, wagerType)} triggered`,
     body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gameTime} on ${gameDate}`,
+    tag: updatedAt
   };
   await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
@@ -294,12 +302,13 @@ async function sendPushNotification(expoPushToken, operator, wagerType, displayT
 
 async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, displayTarget,
                                             gameTime, gameDate, visitorShortDisplayName,
-                                            homeShortDisplayName) {
+                                            homeShortDisplayName, updatedAt) {
   const message = {
     to: expoPushToken,
     sound: 'default',
     title: `${displayOperator(operator, wagerType)} ${displayTarget} triggered`,
     body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gameTime} on ${gameDate}`,
+    tag: updatedAt
   };
   await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',

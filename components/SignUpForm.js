@@ -62,7 +62,7 @@ const SignUpForm = props => {
   return (
     <>
       {signUp.error ?
-        <Text style={styles.error}> {signUp.error} </Text>
+        <Text style={styles.error}>{signUp.error}</Text>
         : <React.Fragment></React.Fragment>
       }
       <Input

@@ -10,6 +10,9 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     backgroundColor: "black",
   },
+  inner: {
+    flex: 1
+  },
   logoContainer: {
     flex: 2,
     alignItems: "center",
@@ -34,19 +37,21 @@ function SignInScreen({ navigation }) {
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <View style={styles.logoContainer}>
-        <Image style={styles.logo}
-               source={shark}
-        />
-      </View>
-      <View style={styles.form}>
-        <SignInForm/>
-      </View>
-      <View style={styles.signUp}>
-        <Button title="SIGN UP"
-                onPress={() => navigation.navigate('Sign Up')}
-                buttonStyle="raised"
-        />
+      <View style={styles.inner}>
+        <View style={styles.logoContainer}>
+          <Image style={styles.logo}
+                 source={shark}
+          />
+        </View>
+        <View style={styles.form}>
+          <SignInForm/>
+        </View>
+        <View style={styles.signUp}>
+          <Button title="SIGN UP"
+                  onPress={() => navigation.navigate('Sign Up')}
+                  buttonStyle="raised"
+          />
+        </View>
       </View>
     </KeyboardAvoidingView>
   );

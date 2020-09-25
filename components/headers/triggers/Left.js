@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Button, Text } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { client } from '../../../utils/Client';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
-import RNPickerSelect, { defaultStyles} from 'react-native-picker-select';
+import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
+
+const styles = StyleSheet.create({
+  sport: {
+    marginBottom: -20,
+    marginRight: 0,
+  }
+});
 
 const GET_SPORTS = gql`
   query allSports {
@@ -47,15 +54,23 @@ const Left = props => {
   }
 
   return (
-    <RNPickerSelect value={left.sportId}
-                    style={headerPickerSelectStyles}
-                    useNativeAndroidPickerStyle={false}
-                    onClose={() => submit(left.sportId)}
-                    onValueChange={(value) =>
-                      select(value)
-                    }
-                    items={sportList()}
-    />
+    <>
+      <Text style={styles.sport}>
+        { left.sportId ?
+          sportList().find(s => s.value == "MLB").abbreviation
+        :
+          "All Sports"
+        }        
+      </Text>
+      <RNPickerSelect value={left.sportId}
+                      style={headerPickerSelectStyles}
+                      onClose={() => submit(left.sportId)}
+                      onValueChange={(value) =>
+                        select(value)
+                      }
+                      items={sportList()}
+      />
+    </>
   )
 
 }

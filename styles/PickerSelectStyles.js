@@ -23,7 +23,6 @@ export const pickerSelectStyles = StyleSheet.create({
     paddingRight: 30, // to ensure the text is never behind the icon
     marginBottom: 15,
   },
-   
 });
 
 export const headerPickerSelectStyles = StyleSheet.create({
@@ -41,14 +40,19 @@ export const headerPickerSelectStyles = StyleSheet.create({
   },
   inputAndroid: {
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 16,
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 8,
-    color: 'black',
+    color: 'white',
     paddingRight: 10, // to ensure the text is never behind the icon
-    marginBottom: 0,
+    marginBottom: -20,
+    //marginRight: -40,
+    //marginLeft: 10,
+    width: 65,
+    //height: 60,
+    //backgroundColor: 'red'
   },
 });

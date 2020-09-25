@@ -230,7 +230,7 @@ const TriggerForm = props => {
                                                       ["success"]: '',
                                                       ["error"]: ''})}
         keyboardType={Platform.OS === 'ios' ? 'numbers-and-punctuation'
-                                            : 'decimal-pad'}
+                                            : 'numeric'}
         numeric
       />
       <View style={styles.submit}>

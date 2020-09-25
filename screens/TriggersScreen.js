@@ -141,7 +141,9 @@ const TriggersScreen = ({ route, navigation }) => {
                                        date={date} 
                                        navigation={navigation} /> }
           containerStyle={{backgroundColor: 'white', justifyContent: 'space-around'}}
-          centerContainerStyle={{justifyContent: 'space-around', flex: 2.5}}
+          leftContainerStyle={{alignItems: 'center', height: 40, justifyContent: 'center', borderRadius: 1, borderWidth: 1, borderColor: 'black', borderRadius: 8}}
+          centerContainerStyle={{justifyContent: 'space-around', flex: 2.2}}
+          rightContainerStyle={{alignItems: 'center', height: 40, justifyContent: 'center', borderRadius: 1, borderWidth: 1, borderColor: 'black', borderRadius: 8}}
         />
         {data.triggers.length == 0 ? 
           <View style={styles.none}>

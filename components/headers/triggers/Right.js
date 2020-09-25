@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Button, Text } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import RNPickerSelect, { defaultStyles} from 'react-native-picker-select';
+import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
+
+const styles = StyleSheet.create({
+  status: {
+    marginBottom: -20,
+    marginRight: 0,
+  }
+});
 
 const Right = props => {
   const [right, setRight] = useState({
@@ -25,23 +32,25 @@ const Right = props => {
                        date: props.date
                       })
   }
-  
+
   return (
-    <RNPickerSelect value={right.status}
-                    style={headerPickerSelectStyles}
-                    useNativeAndroidPickerStyle={false}
-                    onClose={() => submit(right.status)}
-                    onValueChange={(value) =>
-                      select(value)
-                    }
-                    items={[
-                      { label: "Open", value: "Open" },
-                      { label: "Triggered", value: "Triggered" },
-                      { label: "Expired", value: "Expired" },
-                      { label: "Canceled", value: "Canceled" },
-                      { label: "All", value: "" },
-                    ]}
-    />
+    <>
+      <Text style={styles.status}>{right.status || "All"}</Text>
+      <RNPickerSelect value={right.status}
+                      style={headerPickerSelectStyles}
+                      onClose={() => submit(right.status)}
+                      onValueChange={(value) =>
+                        select(value)
+                      }
+                      items={[
+                        { label: "Open", value: "Open" },
+                        { label: "Triggered", value: "Triggered" },
+                        { label: "Expired", value: "Expired" },
+                        { label: "Canceled", value: "Canceled" },
+                        { label: "All", value: "" },
+                      ]}
+      />
+    </>
   )
 
 }

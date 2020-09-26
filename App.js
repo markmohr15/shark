@@ -88,7 +88,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     })
     console.log('TASKTASK TOKEN: ' + options.expoPushToken)
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, options.expoPushToken));
-    console.log('TASK TASK SIZE: ' + triggered.data.length)
+    console.log('TASK TASK SIZE: ' + triggered.data.triggerNotifications.length)
     return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
   } catch (error) {
     return BackgroundFetch.Result.Failed;
@@ -176,7 +176,7 @@ const Shark = () => {
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    console.log(triggered.length)
+    console.log(triggered.data.triggerNotifications.length)
     console.log("FETCH TOKEN: " + expoPushToken)
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
     setTimeout(fetchTriggered, 30000)
@@ -327,33 +327,23 @@ async function registerForPushNotificationsAsync() {
   let token;
   console.log('STARTREGISTERSTARTREGISTER')
   if (Constants.isDevice) {
-    console.log("RFP1RFP1")
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    console.log("RFP2RFP2")
     let finalStatus = existingStatus;
-    console.log("RFP3RFP3")
     if (existingStatus !== 'granted') {
-      console.log("RFP4RFP4")
       const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      console.log("RFP5RFP5")
       finalStatus = status;
-      console.log("RFP6RFP6")
     }
     if (finalStatus !== 'granted') {
-      console.log('FAILFAILFAIL')
       alert('Failed to get push token for push notification!');
       console.log('Failed to get push token for push notification!')
       return;
     }
-    console.log("RFP7RFP7")
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log("RFP8RFP8")
   } else {
     alert('Must use physical device for Push Notifications');
   }
 
   if (Platform.OS === 'android') {
-    console.log("RFP9RFP9")
     Notifications.setNotificationChannelAsync('default', {
       name: 'default',
       importance: Notifications.AndroidImportance.MAX,

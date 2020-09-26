@@ -25,6 +25,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "notification": {
+      "icon": "./assets/small-shark.png"
+    },
     "updates": {
       "fallbackToCacheTimeout": 0
     },

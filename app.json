@@ -15,7 +15,7 @@
     "android": {
       "package": "com.sharksb.app",
       "versionCode": 1,
-
+      "useNextNotificationsApi": true,
     },
     "orientation": "portrait",
     "icon": "./assets/shark.png",

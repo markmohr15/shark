@@ -3,7 +3,6 @@
     "name": "Shark SB",
     "description": "Track line changes",
     "slug": "shark-sb",
-    "sdkVersion": "38.0.0",
     "backgroundColor": "#000000",
     "primaryColor": "#000000",
     "platforms": [
@@ -26,7 +25,8 @@
       "backgroundColor": "#ffffff"
     },
     "notification": {
-      "icon": "./assets/small-shark.png"
+      "icon": "./assets/small-shark.png",
+      "color": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

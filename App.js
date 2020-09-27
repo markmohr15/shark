@@ -86,9 +86,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    console.log('TASKTASK TOKEN: ' + options.expoPushToken)
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, options.expoPushToken));
-    console.log('TASK TASK SIZE: ' + triggered.data.triggerNotifications.length)
     return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
   } catch (error) {
     return BackgroundFetch.Result.Failed;
@@ -96,7 +94,6 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
 });
 
 async function parseTrigger(trigger, expoPushToken) {
-  console.log('PARSE TOKEN: ' + expoPushToken)
   const game = trigger.game
   if (trigger.wagerType == "total") {
     await sendPushNotificationForTotal(expoPushToken, trigger.operator, trigger.wagerType, 
@@ -171,13 +168,10 @@ const Shark = () => {
   }
 
   const fetchTriggered = async () => {
-    console.log('FETCHFETCHFETCH')
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    console.log(triggered.data.triggerNotifications.length)
-    console.log("FETCH TOKEN: " + expoPushToken)
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
     setTimeout(fetchTriggered, 30000)
   }
@@ -283,7 +277,6 @@ const displayOperator = (operator, wagerType) => {
 async function sendPushNotification(expoPushToken, operator, wagerType, displayTarget,
                                     gameTime, gameDate, visitorShortDisplayName,
                                     homeShortDisplayName, teamShortDisplayName, tag) {
-  console.log("SENDPUSHSENDPUSH TOKEN: " + expoPushToken)
   const message = {
     to: expoPushToken,
     sound: 'default',
@@ -325,7 +318,6 @@ async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, 
 
 async function registerForPushNotificationsAsync() {
   let token;
-  console.log('STARTREGISTERSTARTREGISTER')
   if (Constants.isDevice) {
     const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     let finalStatus = existingStatus;
@@ -335,7 +327,6 @@ async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== 'granted') {
       alert('Failed to get push token for push notification!');
-      console.log('Failed to get push token for push notification!')
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
@@ -351,7 +342,6 @@ async function registerForPushNotificationsAsync() {
       lightColor: '#FF231F7C',
     });
   }
-  console.log('ENDREGISTER TOKEN:' + token)
   return token;
 }
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { Button, Input, Text, Header, ThemeProvider } from 'react-native-elements';
-import { client } from '../utils/Client';
+import { Header } from 'react-native-elements';
 import { ApolloProvider, useQuery } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import Loading from '../components/Loading';

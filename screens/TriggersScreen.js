@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
-import { Button, ThemeProvider, Header, Text } from 'react-native-elements';
+import { Header } from 'react-native-elements';
 import { useFocusEffect } from '@react-navigation/native';
-import { client } from '../utils/Client';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+//import { client } from '../utils/Client';
+import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';
@@ -103,6 +103,7 @@ export const GET_TRIGGERS = gql`
 `;
 
 const TriggersScreen = ({ route, navigation }) => {
+  const client = useApolloClient();
   const sportId = parseInt(route.params.sportId)
   const status = route.params.status
   const date = route.params.date

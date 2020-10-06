@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, ThemeProvider } from 'react-native-elements';
 import BottomNav from '../components/BottomNav';
 import SharkText from '../components/SharkText';
 

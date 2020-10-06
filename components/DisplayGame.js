@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, ThemeProvider } from 'react-native-elements';
 import SharkText from './SharkText';
 
 const styles = StyleSheet.create({
@@ -46,16 +45,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
   },
-  buttonText: {
-    fontSize: 14,
-    color: 'white',
-    top: -2,
-  },
-  button: {
-    padding: 0,
-    marginLeft: 2,
-    marginRight: 2,
-  }
 })
 
 const DisplayGame = props => {

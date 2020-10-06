@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { client } from '../../../utils/Client';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
-import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
+import RNPickerSelect from 'react-native-picker-select';
 import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
 
 const styles = StyleSheet.create({
@@ -26,6 +25,7 @@ const GET_SPORTS = gql`
 `;
 
 const Left = props => {
+  const client = useApolloClient();
   const [left, setLeft] = useState({
     sportId: props.sportId,
   })

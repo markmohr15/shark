@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
-import { Button, Text, Input, ThemeProvider } from 'react-native-elements';
-import RNPickerSelect, { defaultStyles} from 'react-native-picker-select';
+import { Button, Text, Input } from 'react-native-elements';
+import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { gql } from "apollo-boost";
-import { client } from '../utils/Client';
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import SharkText from './SharkText';
 import { pickerSelectStyles } from '../styles/PickerSelectStyles';
 
@@ -94,8 +93,6 @@ const TriggerForm = props => {
     {
       onCompleted(data) {
         setTrigger({...trigger, ["error"]: '', ["success"]: 'Trigger Created'})
-        //not sure yet
-        //client.writeData({ data: {  } })
       },
       onError(error) {
         setTrigger({...trigger, ["error"]: error.graphQLErrors.map(x => x.message).join(", ")})
@@ -107,8 +104,6 @@ const TriggerForm = props => {
     {
       onCompleted(data) {
         setTrigger({...trigger, ["error"]: '', ["success"]: 'Trigger Updated'})
-        //not sure yet
-        //client.writeData({ data: {  } })
       },
       onError(error) {
         setTrigger({...trigger, ["error"]: error.graphQLErrors.map(x => x.message).join(", ")})

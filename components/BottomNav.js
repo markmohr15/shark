@@ -1,10 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, Input, ThemeProvider } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import MenuButton from './MenuButton';
 import SearchButton from './SearchButton';
-
 
 const styles = StyleSheet.create({
   bottonNav: {
@@ -16,26 +13,20 @@ const styles = StyleSheet.create({
   },
   menu: {
     flex: 1
-  }
-});
+  },
+})
 
-
-
-const BottomNav = props => {
-  
-
+const BottomNav = (props) => {  
   return (
     <View style={styles.bottonNav}>
       <View style={styles.menu}>
         <MenuButton navigation={props.navigation}/>
       </View>
       {props.search ? 
-        <SearchButton navigation={props.navigation} /> : <></>
+        <SearchButton navigation={props.navigation} /> : <React.Fragment/>
       }  
     </View>
-    
   )
-
 }
 
 export default BottomNav;

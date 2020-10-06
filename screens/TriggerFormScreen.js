@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
-import { Button, Text } from 'react-native-elements';
 import TriggerForm from '../components/TriggerForm';
 import DisplayGame from '../components/DisplayGame';
 

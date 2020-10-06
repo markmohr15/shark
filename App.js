@@ -11,8 +11,8 @@ import TriggerFormScreen from './screens/TriggerFormScreen';
 import SearchScreen from './screens/SearchScreen';
 import SignOut from './components/SignOut';
 import { AppLoading } from 'expo';
-import { client } from './utils/Client';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
+import { createClient } from './utils/Client';
+import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
 import { gql } from "apollo-boost";
 import moment from 'moment';
 import * as TaskManager from 'expo-task-manager';
@@ -81,6 +81,7 @@ const GET_TRIGGERED = gql`
 
 TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
+    const client = useApolloClient();
     const options = await TaskManager.getTaskOptionsAsync(FETCH_TRIGGERED)
     const triggered = await client.query({
       query: GET_TRIGGERED,
@@ -116,15 +117,25 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const App = props => {
+const App = (props) => {
+  const [client, setClient] = useState(null);
+
+  useEffect(() => {
+    if (client) return;
+    createClient().then(newClient => {
+      setClient(newClient);
+    });
+  }, [client]);
+
   return(
-    <ApolloProvider client={client}>
-      <Shark/>
-    </ApolloProvider>
+    !!client && (
+      <ApolloProvider client={client}><Shark/></ApolloProvider>
+    )
   ) 
 }
 
-const Shark = () => {
+const Shark = (props) => {
+  const client = useApolloClient();
   const [shark, setShark] = useState({
     isReady: false,
   })
@@ -176,7 +187,7 @@ const Shark = () => {
     setTimeout(fetchTriggered, 30000)
   }
 
-  const { data, client } = useQuery(GET_TOKEN);
+  const { data } = useQuery(GET_TOKEN);
 
   if (!shark.isReady) {
     return (
@@ -227,6 +238,7 @@ function Root(props) {
 }
 
 const Application = (navigation) => {
+  const client = useApolloClient();
   const sports = client.readQuery({query: GET_SPORTS}).allSports
   
   const today = () => {

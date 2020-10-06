@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, Input, ThemeProvider } from 'react-native-elements';
+import { Button, Text, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { gql } from "apollo-boost";
-import { client } from '../utils/Client';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 
 const styles = StyleSheet.create({
@@ -31,6 +30,7 @@ export const SIGN_UP_USER = gql`
 `;
 
 const SignUpForm = props => {
+  const client = useApolloClient();
   const [signUp, setSignUp] = useState({
     email: '',
     password: '',

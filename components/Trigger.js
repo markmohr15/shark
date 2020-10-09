@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-elements';
-import { gql } from "apollo-boost";
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, gql } from '@apollo/client';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SharkText from './SharkText';
 

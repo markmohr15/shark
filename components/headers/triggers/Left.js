@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
+import { useQuery, useApolloClient, gql } from '@apollo/client';
 import RNPickerSelect from 'react-native-picker-select';
 import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
 
@@ -57,7 +56,7 @@ const Left = props => {
     <>
       <Text style={styles.sport}>
         { left.sportId ?
-          sportList().find(s => s.value == "MLB").abbreviation
+          sportList().find(s => s.value == left.sportId).label
         :
           "All Sports"
         }        

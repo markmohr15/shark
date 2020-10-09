@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { Header } from 'react-native-elements';
 import { useFocusEffect } from '@react-navigation/native';
-//import { client } from '../utils/Client';
-import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
+import { useQuery, useApolloClient, gql } from '@apollo/client';
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';
 import BottomNav from '../components/BottomNav';
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
   
 })
 
-export const GET_TRIGGERS = gql`
+const GET_TRIGGERS = gql`
   query triggers($sportId: Int, $status: String, $date: String){
     triggers(sportId: $sportId, status: $status, date: $date) {
       id
@@ -95,6 +93,8 @@ export const GET_TRIGGERS = gql`
           shortDisplayName
         }
         sport {
+          id
+          abbreviation
           name
         }
       } 

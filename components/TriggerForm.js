@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 import { Button, Text, Input } from 'react-native-elements';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
-import { gql } from "apollo-boost";
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, gql } from '@apollo/client';
 import SharkText from './SharkText';
 import { pickerSelectStyles } from '../styles/PickerSelectStyles';
 

@@ -11,15 +11,16 @@ import TriggerFormScreen from './screens/TriggerFormScreen';
 import SearchScreen from './screens/SearchScreen';
 import SignOut from './components/SignOut';
 import { AppLoading } from 'expo';
-import { createClient } from './utils/Client';
-import { ApolloProvider, useQuery, useApolloClient } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
+import AsyncStorage from '@react-native-community/async-storage';
+import { persistCache } from 'apollo3-cache-persist';
+import { ApolloProvider, useQuery, useApolloClient, gql, ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/client';
 import moment from 'moment';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
+import Loading from './components/Loading';
 
 const FETCH_TRIGGERED = 'background-fetch';
 
@@ -33,8 +34,8 @@ const styles = StyleSheet.create({
 });
 
 const GET_TOKEN = gql`
-  {
-    token @client
+  query token {
+    token
   }
 `;
 
@@ -81,8 +82,16 @@ const GET_TRIGGERED = gql`
 
 TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
-    const client = useApolloClient();
     const options = await TaskManager.getTaskOptionsAsync(FETCH_TRIGGERED)
+    const cache = new InMemoryCache()
+    const client = new ApolloClient({
+      cache: cache,
+      uri: 'https://sharksb-api.herokuapp.com/graphql',
+      //uri: 'http://ace8f72c29d8.ngrok.io/graphql',
+      headers: {
+        authorization: "Bearer " + options.token
+      }
+    });
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
@@ -118,19 +127,45 @@ Notifications.setNotificationHandler({
 });
 
 const App = (props) => {
-  const [client, setClient] = useState(null);
+  const [client, setClient] = useState(undefined);
 
   useEffect(() => {
-    if (client) return;
-    createClient().then(newClient => {
-      setClient(newClient);
+    const cache = new InMemoryCache()      
+      
+    const authMiddleware = new ApolloLink((operation, forward) => {
+      const userToken = client.readQuery({query: GET_TOKEN});
+      operation.setContext({
+        headers: {
+          authorization: userToken.token ? `Bearer ${userToken.token}` : "",
+        }
+      });
+      return forward(operation);
+    })
+
+    const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
+    //const httpLink = new HttpLink({ uri: 'http://ace8f72c29d8.ngrok.io/graphql' });
+
+    const client = new ApolloClient({
+      cache: cache,
+      link: authMiddleware.concat(httpLink),
     });
-  }, [client]);
+
+    client.writeQuery({query: GET_TOKEN, data: {"token": ""}})
+    client.writeQuery({query: GET_SPORTS, data: {"sports": ""}})
+
+    persistCache({
+      cache,
+      storage: AsyncStorage
+    }).then(() => {
+      setClient(client);
+    });
+    return () => {};
+  }, []);
+ 
+  if (client === undefined) return <Loading/>
 
   return(
-    !!client && (
-      <ApolloProvider client={client}><Shark/></ApolloProvider>
-    )
+    <ApolloProvider client={client}><Shark/></ApolloProvider>
   ) 
 }
 
@@ -166,15 +201,15 @@ const Shark = (props) => {
     const sports = await client.query({
       query: GET_SPORTS,
     })
-    client.writeData({data: {sports: sports.data.allSports}})
   }
 
-  const backgroundFetchTriggered = async (expoPushToken) => {
+  const backgroundFetchTriggered = async () => {
     await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
         minimumInterval: 5,
         stopOnTerminate: false,
         startOnBoot: true,
-        expoPushToken: expoPushToken
+        expoPushToken: expoPushToken,
+        token: data.token
     });
   }
 
@@ -183,7 +218,7 @@ const Shark = (props) => {
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));
+    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));      
     setTimeout(fetchTriggered, 30000)
   }
 
@@ -198,7 +233,7 @@ const Shark = (props) => {
       />
     )
   } else if (data.token) {
-    backgroundFetchTriggered(expoPushToken)
+    backgroundFetchTriggered()
     fetchTriggered()
     return (
       <Root/>
@@ -240,7 +275,7 @@ function Root(props) {
 const Application = (navigation) => {
   const client = useApolloClient();
   const sports = client.readQuery({query: GET_SPORTS}).allSports
-  
+
   const today = () => {
     return moment(new Date()).format('YYYY-MM-DD')
   }

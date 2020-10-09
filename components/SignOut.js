@@ -1,11 +1,16 @@
 import React, { useEffect } from 'react';
-import { useApolloClient } from '@apollo/react-hooks';
+import { useApolloClient, gql } from '@apollo/client';
 
+const GET_TOKEN = gql`
+  query token {
+    token
+  }
+`;
 
 const SignOut = props => {
   const client = useApolloClient();
   useEffect(() => {
-    client.writeData({ data: { token: '' } })
+    client.writeQuery({query: GET_TOKEN, data: {"token": ""}})
   }, []);
   
 

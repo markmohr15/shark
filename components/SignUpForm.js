@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { gql } from "apollo-boost";
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useMutation, useApolloClient, gql } from '@apollo/client';
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -20,12 +19,18 @@ const styles = StyleSheet.create({
   }
 });
 
-export const SIGN_UP_USER = gql`
+const SIGN_UP_USER = gql`
   mutation signUp($email: String!, $password: String!, $passwordConfirmation: String!) {
     signUp(input: {attributes: { email: $email, password: $password, passwordConfirmation: $passwordConfirmation}}) {
       email
       token       
     }
+  }
+`;
+
+const GET_TOKEN = gql`
+  query token {
+    token
   }
 `;
 
@@ -41,7 +46,7 @@ const SignUpForm = props => {
   const [signUpUser] = useMutation(SIGN_UP_USER,
     {
       onCompleted(data) {
-        client.writeData({ data: { token: data.signUp.token } })
+        client.writeQuery({query: GET_TOKEN, data: {"token": data.login.token}})
       },
       onError(error) {
         setSignUp({...signUp, ["error"]: error.graphQLErrors.map(x => x.message).join(", ")})

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { Header } from 'react-native-elements';
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
-import { gql } from "apollo-boost";
+import { ApolloProvider, useQuery, gql } from '@apollo/client';
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';
 import BottomNav from '../components/BottomNav';
@@ -43,7 +42,9 @@ const GET_GAMES_BY_SPORT_AND_DATE = gql`
       displayTime
       channel
       sport {
+        id
         abbreviation
+        name
       }
       home {
         id
@@ -60,7 +61,6 @@ const GET_GAMES_BY_SPORT_AND_DATE = gql`
     }
   }    
 `;
-
 
 const ScheduleScreen = ({ route, navigation }) => {
   const sportId = parseInt(route.params.sportId)

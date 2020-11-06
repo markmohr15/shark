@@ -98,8 +98,13 @@ const Trigger = props => {
       switch (trig.wagerType) {
         case "moneyline":
           return trig.game.displayVisitorMl
+          break
         case "runline":
           return trig.game.displayVisitorSpread + " " + trig.game.displayVisitorRl
+          break
+        case "spread":
+          return trig.game.displayVisitorSpread
+          break
         default:
           return ''
       }
@@ -107,8 +112,13 @@ const Trigger = props => {
       switch (trig.wagerType) {
         case "moneyline":
           return trig.game.displayHomeMl
+          break
         case "runline":
           return trig.game.displayHomeSpread + " " + trig.game.displayHomeRl
+          break
+        case "spread":
+          return trig.game.displayHomeSpread
+          break
         default:
           return ''
       }

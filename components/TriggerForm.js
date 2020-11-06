@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
   },
   success: {
     backgroundColor: "green",
-    padding: 0,
-    marginBottom: 5,
+    padding: 10,
+    marginBottom: 10,
     textAlign: "center",
     justifyContent: "center",
     alignItems: "center",
@@ -67,14 +67,14 @@ const TriggerForm = props => {
     teamId: props.teamId,
     wagerType: props.wagerType,
     operator: props.operator,
-    target: calcTarget(),
+    target: props.target || calcTarget(),
     error: '',
     success: ''
   })
 
-  function calcTarget() {
+  function calcTarget(wagerType = props.wagerType) {
     let target = ""
-    switch (props.wagerType) {
+    switch (wagerType) {
       case "moneyline":
         if (isVisitor && greater) {
           target = parseInt(g.displayVisitorMl) + 1
@@ -249,7 +249,7 @@ const TriggerForm = props => {
                         useNativeAndroidPickerStyle={false}
                         onValueChange={(value) =>
                           setTrigger({...trigger, ["wagerType"]: value,
-                                                  ["target"]: calcTarget(),
+                                                  ["target"]: calcTarget(value),
                                                   ["success"]: '',
                                                   ["error"]: ''})
                         }

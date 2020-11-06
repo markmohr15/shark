@@ -82,7 +82,7 @@ const SignUpForm = props => {
         textContentType="username"
       />
       <Input
-        leftIconContainerStyle={{paddingRight: 26, marginLeft: 18}}
+        leftIconContainerStyle={{paddingRight: 26, marginLeft: 4}}
         inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
         placeholder='PASSWORD'
@@ -94,7 +94,7 @@ const SignUpForm = props => {
         secureTextEntry={true}
       />
       <Input
-        leftIconContainerStyle={{paddingRight: 26, marginLeft: 18}}
+        leftIconContainerStyle={{paddingRight: 26, marginLeft: 4}}
         inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
         placeholder='PASSWORD CONFIRMATION'
@@ -107,7 +107,6 @@ const SignUpForm = props => {
       />
       <Button
         title="SIGN UP"
-        buttonStyle="raised"
         onPress={submit}
       />
     </>

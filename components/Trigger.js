@@ -90,10 +90,12 @@ const Trigger = props => {
   }
 
   const currentLine = () => {
-    if (isVisitor) {
+    if (trig.wagerType == "total" && trig.operator == "less_eq") {
+      return trig.game.displayOver
+    } else if (trig.wagerType == "total") {
+      return trig.game.displayUnder
+    } else if (isVisitor) {
       switch (trig.wagerType) {
-        case "total":
-          return trig.game.total
         case "moneyline":
           return trig.game.displayVisitorMl
         case "runline":
@@ -103,8 +105,6 @@ const Trigger = props => {
       }
     } else {
       switch (trig.wagerType) {
-        case "total":
-          return trig.game.total
         case "moneyline":
           return trig.game.displayHomeMl
         case "runline":

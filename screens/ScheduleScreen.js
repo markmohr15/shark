@@ -28,16 +28,16 @@ const GET_GAMES_BY_SPORT_AND_DATE = gql`
   query gamesBySportAndDate($sportId: Int!, $date: String!){
     gamesBySportAndDate(sportId: $sportId, date: $date) {
       id
+      displayHomeSpread
       displayHomeMl
       displayHomeRl
       homeRot
+      displayVisitorSpread
       displayVisitorMl
       displayVisitorRl
       visitorRot
-      total
-      spread
-      displayHomeSpread
-      displayVisitorSpread
+      displayOver
+      displayUnder
       status
       displayTime
       channel

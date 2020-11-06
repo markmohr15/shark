@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   info: {
-    flex: 0.85,
+    flex: 1,
   },
   rotation: {
     flex: 0.6,
@@ -26,15 +26,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   moneyline: {
-    flex: 0.7,
-    alignItems: 'flex-end',
-  },
-  total: {
     flex: 1,
     alignItems: 'flex-end',
   },
+  total: {
+    flex: 1.3,
+    alignItems: 'flex-end',
+  },
   runline: {
-    flex: 2,
+    flex: 2.5,
     flexDirection: 'row',
   },
   spread: {
@@ -48,66 +48,57 @@ const styles = StyleSheet.create({
 })
 
 const DisplayGame = props => {
+  const g = props.game
 
   return (
     <View style={styles.game}>
       <View style={styles.row}>
         <View style={styles.info}>
-          <SharkText>{props.game.displayTime}</SharkText>
+          <SharkText>{g.displayTime}</SharkText>
         </View>
         <View style={styles.rotation}>
-          <SharkText>{props.game.visitorRot}</SharkText>
+          <SharkText>{g.visitorRot}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText>{props.game.visitor.shortDisplayName}</SharkText>
+          <SharkText>{g.visitor.shortDisplayName}</SharkText>
         </View>
         <View style={styles.moneyline}>
-          <SharkText>{props.game.displayVisitorMl}</SharkText>
+          <SharkText>{g.displayVisitorMl}</SharkText>
         </View>
         <View style={styles.total}>
-          <SharkText> 
-            {props.game.total ? 
-              "Ov " + props.game.total
-              : <React.Fragment/>
-            }
-          </SharkText>
+          <SharkText>{g.displayOver}</SharkText>
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
-            <SharkText>{props.game.displayVisitorSpread}</SharkText>
+            <SharkText>{g.displayVisitorSpread}</SharkText>
           </View>
           <View style={styles.line}>
-            <SharkText>{props.game.displayVisitorRl}</SharkText>
+            <SharkText>{g.displayVisitorRl}</SharkText>
           </View>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.info}>
-          <SharkText>{props.game.channel}</SharkText>
+          <SharkText>{g.channel}</SharkText>
         </View>
         <View style={styles.rotation}>
-          <SharkText>{props.game.homeRot}</SharkText>
+          <SharkText>{g.homeRot}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText>{props.game.home.shortDisplayName}</SharkText>
+          <SharkText>{g.home.shortDisplayName}</SharkText>
         </View>
         <View style={styles.moneyline}>
-          <SharkText>{props.game.displayHomeMl}</SharkText>
+          <SharkText>{g.displayHomeMl}</SharkText>
         </View>
         <View style={styles.total}>
-          <SharkText> 
-            {props.game.total ? 
-              "Un " + props.game.total
-              : <React.Fragment/>
-            }
-          </SharkText>
+          <SharkText>{g.displayUnder}</SharkText>
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
-            <SharkText>{props.game.displayHomeSpread}</SharkText>
+            <SharkText>{g.displayHomeSpread}</SharkText>
           </View>
           <View style={styles.line}>
-            <SharkText>{props.game.displayHomeRl}</SharkText>
+            <SharkText>{g.displayHomeRl}</SharkText>
           </View>
         </View>
       </View>

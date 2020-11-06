@@ -10,10 +10,10 @@
       "android",
       "web"
     ],
-    "version": "0.0.3",
+    "version": "0.0.4",
     "android": {
       "package": "com.sharksb.app",
-      "versionCode": 3,
+      "versionCode": 4,
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json"
     },

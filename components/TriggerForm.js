@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export const CREATE_TRIGGER = gql`
+const CREATE_TRIGGER = gql`
   mutation createTrigger($gameId: Int!, $teamId: Int, $operator: String!, $target: Float!, $wagerType: String!) {
     createTrigger(input: {gameId: $gameId, teamId: $teamId, operator: $operator, target: $target, wagerType: $wagerType}) {
       id
@@ -46,7 +46,7 @@ export const CREATE_TRIGGER = gql`
   }
 `;
 
-export const UPDATE_TRIGGER = gql`
+const UPDATE_TRIGGER = gql`
   mutation updateTrigger($id: Int!, $teamId: Int, $operator: String!, $target: Float!, $wagerType: String!) {
     updateTrigger(input: {id: $id, teamId: $teamId, operator: $operator, target: $target, wagerType: $wagerType}) {
       id
@@ -56,14 +56,74 @@ export const UPDATE_TRIGGER = gql`
 `;
 
 const TriggerForm = props => {
+  let isVisitor = false
+  if (props.teamId != null) {
+    isVisitor = props.game.visitor.id == props.teamId
+  }
+  const greater = props.operator == "greater_eq"
+  const g = props.game
+
   const [trigger, setTrigger] = useState({
     teamId: props.teamId,
     wagerType: props.wagerType,
     operator: props.operator,
-    target: props.target || '',
+    target: calcTarget(),
     error: '',
     success: ''
   })
+
+  function calcTarget() {
+    let target = ""
+    switch (props.wagerType) {
+      case "moneyline":
+        if (isVisitor && greater) {
+          target = parseInt(g.displayVisitorMl) + 1
+        } else if (isVisitor) {
+          target = parseInt(g.displayVisitorMl) - 1
+        } else if (!isVisitor && greater) {
+          target = parseInt(g.displayHomeMl) + 1
+        } else {
+          target = parseInt(g.displayHomeMl) - 1
+        }
+        break
+      case "runline":
+        if (isVisitor && greater) {
+          target = parseInt(g.displayVisitorRl) + 1
+        } else if (isVisitor) {
+          target = parseInt(g.displayVisitorRl) - 1
+        } else if (!isVisitor && greater) {
+          target = parseInt(g.displayHomeRl) + 1
+        } else {
+          target = parseInt(g.displayHomeRl) - 1
+        }
+        break
+      case "spread":
+        if (isVisitor && greater) {
+          target = parseFloat(g.displayVisitorSpread) + 0.5
+        } else if (isVisitor) {
+          target = parseFloat(g.displayVisitorSpread) - 0.5
+        } else if (!isVisitor && greater) {
+          target = parseFloat(g.displayHomeSpread) + 0.5
+        } else {
+          target = parseFloat(g.displayHomeSpread) - 0.5
+        }
+        break
+      case "total":
+        if (greater) {
+          target = parseFloat(g.displayUnder.substr(3)) + 0.5
+        } else {
+          target = parseFloat(g.displayOver.substr(3)) - 0.5
+        }
+        break
+    }
+    if (target == 99) {
+      target = -101
+    } else if (target == -99){
+      target = 101
+    }
+    return target.toString()
+  }
+  
 
   const wagerTypes = () => {
     const abbrev = props.game.sport.abbreviation
@@ -189,6 +249,7 @@ const TriggerForm = props => {
                         useNativeAndroidPickerStyle={false}
                         onValueChange={(value) =>
                           setTrigger({...trigger, ["wagerType"]: value,
+                                                  ["target"]: calcTarget(),
                                                   ["success"]: '',
                                                   ["error"]: ''})
                         }
@@ -230,7 +291,6 @@ const TriggerForm = props => {
       <View style={styles.submit}>
         <Button
           title={props.triggerId ? "UPDATE" : "CREATE"}
-          buttonStyle="raised"
           onPress={event => submit()}
         />
       </View>

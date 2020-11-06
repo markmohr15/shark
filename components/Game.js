@@ -60,16 +60,17 @@ const styles = StyleSheet.create({
 })
 
 const Game = props => {
+  const g = props.game
 
   const goToTrigger = (teamId, wagerType, operator) => {
-    props.navigation.navigate("Trigger Form", {game: props.game,
+    props.navigation.navigate("Trigger Form", {game: g,
                                                teamId: teamId,
                                                wagerType: wagerType,
                                                operator: operator})
   }
 
   const spreadOrRunline = () => {
-    if (["MLB", "KBO", "NPB", "NHL"].includes(props.game.sport.abbreviation)) {
+    if (["MLB", "KBO", "NPB", "NHL"].includes(g.sport.abbreviation)) {
       return "runline"
     } else {
       return "spread"
@@ -80,29 +81,29 @@ const Game = props => {
     <View style={styles.game}>
       <View style={styles.row}>
         <View style={styles.info}>
-          <SharkText>{props.game.displayTime}</SharkText>
+          <SharkText>{g.displayTime}</SharkText>
         </View>
         <View style={styles.rotation}>
-          <SharkText>{props.game.visitorRot}</SharkText>
+          <SharkText>{g.visitorRot}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText>{props.game.visitor.shortDisplayName}</SharkText>
+          <SharkText>{g.visitor.shortDisplayName}</SharkText>
         </View>
         <View style={styles.moneyline}>
-          {props.game.displayVisitorMl ?
-            <Button title={props.game.displayVisitorMl}
+          {g.displayVisitorMl ?
+            <Button title={g.displayVisitorMl}
                     type="clear"
-                    onPress={event => goToTrigger(props.game.visitor.id, 'moneyline', 'greater_eq')} 
+                    onPress={event => goToTrigger(g.visitor.id, 'moneyline', 'greater_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button} />
             : <React.Fragment/>
           }
         </View>
         <View style={styles.total}>
-          {props.game.total ? 
-            <Button title={"Ov " + props.game.total}
+          {g.displayOver ? 
+            <Button title={g.displayOver}
                     type="clear"
-                    onPress={event => goToTrigger(null, 'total', 'greater_eq')} 
+                    onPress={event => goToTrigger(null, 'total', 'less_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button}/>
             : <React.Fragment/>
@@ -110,20 +111,20 @@ const Game = props => {
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
-            {props.game.displayVisitorSpread ?
-              <Button title={props.game.displayVisitorSpread}
+            {g.displayVisitorSpread ?
+              <Button title={g.displayVisitorSpread}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.visitor.id, spreadOrRunline(), 'greater_eq')} 
+                      onPress={event => goToTrigger(g.visitor.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/>            
               : <React.Fragment/>
             }
           </View>
           <View style={styles.line}>
-            {props.game.displayVisitorRl ?
-              <Button title={props.game.displayVisitorRl}
+            {g.displayVisitorRl ?
+              <Button title={g.displayVisitorRl}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.visitor.id, spreadOrRunline(), 'greater_eq')} 
+                      onPress={event => goToTrigger(g.visitor.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/>    
               : <React.Fragment/>
@@ -133,29 +134,29 @@ const Game = props => {
       </View>
       <View style={styles.row}>
         <View style={styles.info}>
-          <SharkText>{props.game.channel}</SharkText>
+          <SharkText>{g.channel}</SharkText>
         </View>
         <View style={styles.rotation}>
-          <SharkText>{props.game.homeRot}</SharkText>
+          <SharkText>{g.homeRot}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText>{props.game.home.shortDisplayName}</SharkText>
+          <SharkText>{g.home.shortDisplayName}</SharkText>
         </View>
         <View style={styles.moneyline}>
-          {props.game.displayHomeMl ?
-            <Button title={props.game.displayHomeMl}
+          {g.displayHomeMl ?
+            <Button title={g.displayHomeMl}
                     type="clear"
-                    onPress={event => goToTrigger(props.game.home.id, 'moneyline', 'greater_eq')} 
+                    onPress={event => goToTrigger(g.home.id, 'moneyline', 'greater_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button}/>
             : <React.Fragment/>
           }
         </View>
         <View style={styles.total}>
-          {props.game.total ? 
-            <Button title={"Un " + props.game.total}
+          {g.displayUnder ? 
+            <Button title={g.displayUnder}
                     type="clear"
-                    onPress={event => goToTrigger(null, 'total', 'less_eq')} 
+                    onPress={event => goToTrigger(null, 'total', 'greater_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button}/>                      
             : <React.Fragment/>
@@ -163,20 +164,20 @@ const Game = props => {
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
-            {props.game.displayHomeSpread ?
-              <Button title={props.game.displayHomeSpread}
+            {g.displayHomeSpread ?
+              <Button title={g.displayHomeSpread}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.home.id, spreadOrRunline(), 'greater_eq')} 
+                      onPress={event => goToTrigger(g.home.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/> 
               : <React.Fragment/>
             }
           </View>
           <View style={styles.line}>
-            {props.game.displayHomeRl ?
-              <Button title={props.game.displayHomeRl}
+            {g.displayHomeRl ?
+              <Button title={g.displayHomeRl}
                       type="clear"
-                      onPress={event => goToTrigger(props.game.home.id, spreadOrRunline(), 'greater_eq')} 
+                      onPress={event => goToTrigger(g.home.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/> 
               : <React.Fragment/>

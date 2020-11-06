@@ -76,7 +76,7 @@ const SignInForm = props => {
         textContentType="username"
       />
       <Input
-        leftIconContainerStyle={{paddingRight: 26, marginLeft: 18}}
+        leftIconContainerStyle={{paddingRight: 26, marginLeft: 4}}
         inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
         placeholder='PASSWORD'
@@ -89,7 +89,6 @@ const SignInForm = props => {
       />
       <Button
         title="SIGN IN"
-        buttonStyle="raised"
         onPress={submit}
       />
       

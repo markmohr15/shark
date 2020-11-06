@@ -73,13 +73,14 @@ const GET_TRIGGERS = gql`
         id
         displayTime
         channel
-        total
         displayHomeMl
         displayHomeRl
         displayHomeSpread
         displayVisitorMl
         displayVisitorRl
         displayVisitorSpread
+        displayOver
+        displayUnder
         home {
           id
           name

@@ -9,6 +9,7 @@ import ScheduleScreen from './screens/ScheduleScreen';
 import TriggersScreen from './screens/TriggersScreen';
 import TriggerFormScreen from './screens/TriggerFormScreen';
 import SearchScreen from './screens/SearchScreen';
+import SettingsScreen from './screens/SettingsScreen';
 import SignOut from './components/SignOut';
 import { AppLoading } from 'expo';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -87,7 +88,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const client = new ApolloClient({
       cache: cache,
       uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'http://ace8f72c29d8.ngrok.io/graphql',
+      //uri: 'http://cd16f8d3dcd3.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token
       }
@@ -143,7 +144,7 @@ const App = (props) => {
     })
 
     const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    //const httpLink = new HttpLink({ uri: 'http://ace8f72c29d8.ngrok.io/graphql' });
+    //const httpLink = new HttpLink({ uri: 'http://cd16f8d3dcd3.ngrok.io/graphql' });
 
     const client = new ApolloClient({
       cache: cache,
@@ -296,6 +297,7 @@ const Application = (navigation) => {
                                      status: 'Open',
                                      date: today()}} />    
       <Drawer.Screen name="Search" component={SearchScreen} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Sign Out" component={SignOut} />
     </Drawer.Navigator>
   )

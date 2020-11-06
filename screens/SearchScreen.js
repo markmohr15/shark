@@ -20,7 +20,7 @@ function SearchScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.search}>
-        <SharkText> Searching for teams and individual players is coming! </SharkText>
+        <SharkText>Searching for teams and individual players is coming!</SharkText>
       </View>
       <BottomNav search={false}
                  navigation={navigation}

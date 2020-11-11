@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 3,
-    paddingBottom: 20,
+    paddingBottom: 60,
   },
   signIn: {
     flex: 1,
@@ -45,7 +45,6 @@ function SignUpScreen({ navigation }) {
       <View style={styles.signIn}>
         <Button title="SIGN IN"
                 onPress={() => navigation.navigate('Sign In')}
-                buttonStyle="raised"
         />
       </View>
     </KeyboardAvoidingView>

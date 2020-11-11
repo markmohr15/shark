@@ -53,8 +53,8 @@ const UPDATE_SETTINGS = gql`
 const SettingsForm = props => {
   const client = useApolloClient();
   const [settings, setSettings] = useState({
-    betOnline: true,
-    bookmaker: false,
+    betOnline: props.sportsbooks.includes("BetOnline"),
+    bookmaker: props.sportsbooks.includes("Bookmaker"),
     error: '',
     success: '',
   })

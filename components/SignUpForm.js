@@ -5,9 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useMutation, useApolloClient, gql } from '@apollo/client';
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginBottom: 10,
-  },
   input: {
     color: "white"
   },
@@ -72,7 +69,6 @@ const SignUpForm = props => {
       }
       <Input
         leftIconContainerStyle={{paddingRight: 20}}
-        inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
         placeholder='EMAIL'
         placeholderTextColor="#adacac"
@@ -83,7 +79,6 @@ const SignUpForm = props => {
       />
       <Input
         leftIconContainerStyle={{paddingRight: 26, marginLeft: 4}}
-        inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
         placeholder='PASSWORD'
         placeholderTextColor="#adacac"
@@ -95,7 +90,6 @@ const SignUpForm = props => {
       />
       <Input
         leftIconContainerStyle={{paddingRight: 26, marginLeft: 4}}
-        inputContainerStyle={styles.inputContainer}
         inputStyle={styles.input}
         placeholder='PASSWORD CONFIRMATION'
         placeholderTextColor="#adacac"

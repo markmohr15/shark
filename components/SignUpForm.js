@@ -43,7 +43,7 @@ const SignUpForm = props => {
   const [signUpUser] = useMutation(SIGN_UP_USER,
     {
       onCompleted(data) {
-        client.writeQuery({query: GET_TOKEN, data: {"token": data.login.token}})
+        client.writeQuery({query: GET_TOKEN, data: {"token": data.signUp.token}})
       },
       onError(error) {
         setSignUp({...signUp, ["error"]: error.graphQLErrors.map(x => x.message).join(", ")})

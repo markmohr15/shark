@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Image, StyleSheet, Text, View, Platform } from 'react-native';
+import { Image, StyleSheet, Text, View, Platform, AppState } from 'react-native';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
@@ -84,11 +84,12 @@ const GET_TRIGGERED = gql`
 TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
     const options = await TaskManager.getTaskOptionsAsync(FETCH_TRIGGERED)
+    if (!options.token) return BackgroundFetch.Result.NoData;
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
       uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'http://cd16f8d3dcd3.ngrok.io/graphql',
+      //uri: 'http://7794d0ca7a16.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token
       }
@@ -144,7 +145,7 @@ const App = (props) => {
     })
 
     const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    //const httpLink = new HttpLink({ uri: 'http://cd16f8d3dcd3.ngrok.io/graphql' });
+    //const httpLink = new HttpLink({ uri: 'http://7794d0ca7a16.ngrok.io/graphql' });
 
     const client = new ApolloClient({
       cache: cache,
@@ -175,11 +176,18 @@ const Shark = (props) => {
   const [shark, setShark] = useState({
     isReady: false,
   })
-
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+
+  const getSports = async () => {
+    const sports = await client.query({
+      query: GET_SPORTS,
+    })
+  }
+
+  const { data } = useQuery(GET_TOKEN);
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -191,53 +199,24 @@ const Shark = (props) => {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });
-
+    
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
     };
   }, []);
 
-  const getSports = async () => {
-    const sports = await client.query({
-      query: GET_SPORTS,
-    })
-  }
-
-  const backgroundFetchTriggered = async () => {
-    await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
-        minimumInterval: 5,
-        stopOnTerminate: false,
-        startOnBoot: true,
-        expoPushToken: expoPushToken,
-        token: data.token
-    });
-  }
-
-  const fetchTriggered = async () => {
-    const triggered = await client.query({
-      query: GET_TRIGGERED,
-      fetchPolicy: "network-only"
-    })
-    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoPushToken));      
-    setTimeout(fetchTriggered, 30000)
-  }
-
-  const { data } = useQuery(GET_TOKEN);
-
   if (!shark.isReady) {
     return (
       <AppLoading
         startAsync={getSports()}
-        onFinish={setShark({["isReady"]: true })}
+        onFinish={setShark({...shark, ["isReady"]: true })}
         onError={console.warn}
       />
     )
   } else if (data.token) {
-    backgroundFetchTriggered()
-    fetchTriggered()
     return (
-      <Root/>
+      <Root expoPushToken={expoPushToken}/>
     )
   } else {
     return (      
@@ -246,7 +225,7 @@ const Shark = (props) => {
   }
 }
 
-function SignIn() {
+const SignIn = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -257,7 +236,39 @@ function SignIn() {
   )
 }
 
-function Root(props) {
+const Root = (props) => {
+  const client = useApolloClient();
+  const { data } = useQuery(GET_TOKEN);
+  let timer = ''
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+  const backgroundFetchTriggered = async () => {
+    await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
+        minimumInterval: 5,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        expoPushToken: props.expoPushToken,
+        token: data.token
+    });
+  }
+
+  const fetchTriggered = async () => {
+    const triggered = await client.query({
+      query: GET_TRIGGERED,
+      fetchPolicy: "network-only"
+    })
+    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, props.expoPushToken));      
+    clearTimeout(timer)
+    timer = setTimeout(fetchTriggered, 30000)
+  }
+
+  useEffect(() => {
+    backgroundFetchTriggered()
+    clearTimeout(timer)
+    fetchTriggered()
+  }, []);
+
   return (
     <NavigationContainer>
       <RootStack.Navigator mode="modal">

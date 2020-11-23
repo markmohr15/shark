@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Image, StyleSheet, Text, View, Platform, AppState } from 'react-native';
+import { Image, StyleSheet, Text, View, Platform } from 'react-native';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
@@ -180,6 +180,7 @@ const Shark = (props) => {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const { data } = useQuery(GET_TOKEN);
 
   const getSports = async () => {
     const sports = await client.query({
@@ -187,7 +188,15 @@ const Shark = (props) => {
     })
   }
 
-  const { data } = useQuery(GET_TOKEN);
+  const backgroundFetchTriggered = async () => {
+    await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
+        minimumInterval: 5,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        expoPushToken: (await Notifications.getExpoPushTokenAsync()).data,
+        token: data.token
+    });
+  }
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -215,8 +224,9 @@ const Shark = (props) => {
       />
     )
   } else if (data.token) {
+    backgroundFetchTriggered()
     return (
-      <Root expoPushToken={expoPushToken}/>
+      <Root/>
     )
   } else {
     return (      
@@ -240,31 +250,19 @@ const Root = (props) => {
   const client = useApolloClient();
   const { data } = useQuery(GET_TOKEN);
   let timer = ''
-  const appState = useRef(AppState.currentState);
-  const [appStateVisible, setAppStateVisible] = useState(appState.current);
-
-  const backgroundFetchTriggered = async () => {
-    await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
-        minimumInterval: 5,
-        stopOnTerminate: false,
-        startOnBoot: true,
-        expoPushToken: props.expoPushToken,
-        token: data.token
-    });
-  }
 
   const fetchTriggered = async () => {
+    const expoToken = (await Notifications.getExpoPushTokenAsync()).data
     const triggered = await client.query({
       query: GET_TRIGGERED,
       fetchPolicy: "network-only"
     })
-    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, props.expoPushToken));      
+    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoToken));      
     clearTimeout(timer)
     timer = setTimeout(fetchTriggered, 30000)
   }
 
   useEffect(() => {
-    backgroundFetchTriggered()
     clearTimeout(timer)
     fetchTriggered()
   }, []);
@@ -363,9 +361,10 @@ async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, 
     sound: 'default',
     title: `${displayOperator(operator, wagerType)} ${displayTarget} triggered`,
     body: `${visitorShortDisplayName} @ ${homeShortDisplayName} starts at ${gameTime} on ${gameDate}`,
-    tag: tag
+    tag: tag,
+    priority: 'high'
   };
-  await fetch('https://exp.host/--/api/v2/push/send', {
+  const msg = await fetch('https://exp.host/--/api/v2/push/send', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -374,6 +373,7 @@ async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, 
     },
     body: JSON.stringify(message),
   });
+  console.log(await msg.text())
 }
 
 async function registerForPushNotificationsAsync() {

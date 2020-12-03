@@ -10,10 +10,10 @@
       "android",
       "web"
     ],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "android": {
       "package": "com.sharksb.app",
-      "versionCode": 10,
+      "versionCode": 11,
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json"
     },
@@ -36,6 +36,19 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "extra": {
+      "bugsnag": {
+        "apiKey": "ecdce1b1d55d8a6340d4982dce3c6930"
+      }
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "@bugsnag/expo/hooks/post-publish.js",
+          "config": {}
+        }
+      ]
     }
   }
 }

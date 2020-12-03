@@ -1,3 +1,6 @@
+import Bugsnag from '@bugsnag/expo';
+Bugsnag.start();
+
 import React, { useState, useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -89,7 +92,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const client = new ApolloClient({
       cache: cache,
       uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'http://7794d0ca7a16.ngrok.io/graphql',
+      //uri: 'http://00d0ee8d039a.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token
       }
@@ -145,7 +148,7 @@ const App = (props) => {
     })
 
     const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    //const httpLink = new HttpLink({ uri: 'http://7794d0ca7a16.ngrok.io/graphql' });
+    //const httpLink = new HttpLink({ uri: 'http://00d0ee8d039a.ngrok.io/graphql' });
 
     const client = new ApolloClient({
       cache: cache,
@@ -253,11 +256,15 @@ const Root = (props) => {
 
   const fetchTriggered = async () => {
     const expoToken = (await Notifications.getExpoPushTokenAsync()).data
-    const triggered = await client.query({
-      query: GET_TRIGGERED,
-      fetchPolicy: "network-only"
-    })
-    triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoToken));      
+    if (expoToken) {
+      const triggered = await client.query({
+        query: GET_TRIGGERED,
+        fetchPolicy: "network-only"
+      })
+      triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoToken));      
+    } else {
+      Bugsnag.notify(new Error('expo push token not set'))
+    }
     clearTimeout(timer)
     timer = setTimeout(fetchTriggered, 30000)
   }
@@ -373,7 +380,6 @@ async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, 
     },
     body: JSON.stringify(message),
   });
-  console.log(await msg.text())
 }
 
 async function registerForPushNotificationsAsync() {

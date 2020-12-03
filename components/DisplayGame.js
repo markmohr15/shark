@@ -15,35 +15,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   info: {
-    flex: 1,
+    flex: 1.2,
   },
   rotation: {
-    flex: 0.6,
+    flex: 0.9,
     alignItems: 'flex-end',
-    paddingRight: 5,
+    paddingRight: 10,
   },
   name: {
-    flex: 1,
+    flex: 1.2,
   },
   moneyline: {
-    flex: 1,
+    flex: 1.1,
     alignItems: 'flex-end',
   },
   total: {
-    flex: 1.3,
+    flex: 1.7,
     alignItems: 'flex-end',
   },
   runline: {
-    flex: 2.5,
+    flex: 2.2,
     flexDirection: 'row',
   },
   spread: {
-    flex: 2,
+    flex: 1,
     alignItems: 'flex-end',
   },
   line: {
-    flex: 1,
+    flex: 0.7,
     alignItems: 'flex-end',
+    paddingRight: 5,
   },
 })
 

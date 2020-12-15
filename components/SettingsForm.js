@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
 });
 
 const UPDATE_SETTINGS = gql`
-  mutation updateSettings($betOnline: Boolean!, $bookmaker: Boolean!) {
-    updateSettings(input: {betOnline: $betOnline, bookmaker: $bookmaker}) {
+  mutation updateSettings($betOnline: Boolean!, $bookmaker: Boolean!, $bovada: Boolean!) {
+    updateSettings(input: {betOnline: $betOnline, bookmaker: $bookmaker, bovada: $bovada}) {
       id
     }
   }
@@ -55,6 +55,7 @@ const SettingsForm = props => {
   const [settings, setSettings] = useState({
     betOnline: props.sportsbooks.includes("BetOnline"),
     bookmaker: props.sportsbooks.includes("Bookmaker"),
+    bovada: props.sportsbooks.includes("Bovada")
     error: '',
     success: '',
   })
@@ -71,10 +72,12 @@ const SettingsForm = props => {
   );
     
   const submit = async () => {
-    if (!settings.betOnline && !settings.bookmaker) {
+    if (!settings.betOnline && !settings.bookmaker && !settings.bovada) {
       setSettings({...settings, ["error"]: "You must select at least one sportsbook.", ["success"]: ""})
     } else {
-      updateSettings({ variables: { betOnline: settings.betOnline, bookmaker: settings.bookmaker } });
+      updateSettings({ variables: { betOnline: settings.betOnline, 
+                                    bookmaker: settings.bookmaker,
+                                    bovada: settings.bovada } });
     }
   }
 
@@ -113,7 +116,13 @@ const SettingsForm = props => {
           containerStyle={styles.checkbox}
           titleProps={{style: styles.checkboxTitle}}
         />
-      
+        <CheckBox
+          title="   Bovada"
+          checked={settings.bovada}
+          onPress={() => setSettings({...settings, ["bovada"]: !settings.bovada})}
+          containerStyle={styles.checkbox}
+          titleProps={{style: styles.checkboxTitle}}
+        />
         <Button
           title="SUBMIT"
           onPress={submit}

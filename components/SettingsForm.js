@@ -55,7 +55,7 @@ const SettingsForm = props => {
   const [settings, setSettings] = useState({
     betOnline: props.sportsbooks.includes("BetOnline"),
     bookmaker: props.sportsbooks.includes("Bookmaker"),
-    bovada: props.sportsbooks.includes("Bovada")
+    bovada: props.sportsbooks.includes("Bovada"),
     error: '',
     success: '',
   })

@@ -26,6 +26,7 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import Loading from './components/Loading';
+import ErrorMsg from './components/ErrorMsg';
 
 const FETCH_TRIGGERED = 'background-fetch';
 
@@ -159,7 +160,6 @@ const App = (props) => {
     });
 
     client.writeQuery({query: GET_TOKEN, data: {"token": ""}})
-    client.writeQuery({query: GET_SPORTS, data: {"sports": ""}})
 
     persistCache({
       cache,
@@ -188,10 +188,8 @@ const Shark = (props) => {
   const responseListener = useRef();
   const { data } = useQuery(GET_TOKEN);
 
-  const getSports = async () => {
-    const sports = await client.query({
-      query: GET_SPORTS,
-    })
+  const initApp = async () => {
+    console.log('starting up')
   }
 
   const backgroundFetchTriggered = async () => {
@@ -224,7 +222,7 @@ const Shark = (props) => {
   if (!shark.isReady) {
     return (
       <AppLoading
-        startAsync={getSports()}
+        startAsync={initApp()}
         onFinish={setShark({...shark, ["isReady"]: true })}
         onError={console.warn}
       />
@@ -294,15 +292,21 @@ const Root = (props) => {
 
 const Application = (navigation) => {
   const client = useApolloClient();
-  const sports = client.readQuery({query: GET_SPORTS}).allSports
+  const { loading, error, data, refetch } = useQuery(GET_SPORTS, {
+    fetchPolicy: "cache-and-network",
+    pollInterval: 1800000
+  });
 
   const today = () => {
     return moment(new Date()).format('YYYY-MM-DD')
   }
 
+  if (loading) return <Loading/>
+  if (error) return <ErrorMsg error={error}/>
+
   return (
     <Drawer.Navigator initialRouteName="Triggers">
-      {sports.map((sport) => (
+      {data.allSports.map((sport) => (
         <Drawer.Screen name={sport.abbreviation} 
                        component={ScheduleScreen}
                        key={sport.id} 

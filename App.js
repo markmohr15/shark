@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Image, StyleSheet, Text, View, Platform } from 'react-native';
+import ErrorScreen from './screens/ErrorScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
@@ -27,6 +28,8 @@ import * as Permissions from 'expo-permissions';
 import Loading from './components/Loading';
 
 const FETCH_TRIGGERED = 'background-fetch';
+
+const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
 
 const styles = StyleSheet.create({
   container: {
@@ -411,4 +414,7 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-export default App;
+export default () =>
+  <ErrorBoundary FallbackComponent={ErrorScreen}>
+    <App />
+  </ErrorBoundary>

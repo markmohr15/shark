@@ -43,8 +43,10 @@ const styles = StyleSheet.create({
 });
 
 const UPDATE_SETTINGS = gql`
-  mutation updateSettings($betOnline: Boolean!, $bookmaker: Boolean!, $bovada: Boolean!) {
-    updateSettings(input: {betOnline: $betOnline, bookmaker: $bookmaker, bovada: $bovada}) {
+  mutation updateSettings($betOnline: Boolean!, $bookmaker: Boolean!, 
+                          $bovada: Boolean!, $myBookie: Boolean!) {
+    updateSettings(input: {betOnline: $betOnline, bookmaker: $bookmaker, 
+                           bovada: $bovada, myBookie: $myBookie}) {
       id
     }
   }
@@ -56,6 +58,7 @@ const SettingsForm = props => {
     betOnline: props.sportsbooks.includes("BetOnline"),
     bookmaker: props.sportsbooks.includes("Bookmaker"),
     bovada: props.sportsbooks.includes("Bovada"),
+    myBookie: props.sportsbooks.includes("MyBookie"),
     error: '',
     success: '',
   })
@@ -72,12 +75,13 @@ const SettingsForm = props => {
   );
     
   const submit = async () => {
-    if (!settings.betOnline && !settings.bookmaker && !settings.bovada) {
+    if (!settings.betOnline && !settings.bookmaker && !settings.bovada && !settings.myBookie) {
       setSettings({...settings, ["error"]: "You must select at least one sportsbook.", ["success"]: ""})
     } else {
       updateSettings({ variables: { betOnline: settings.betOnline, 
                                     bookmaker: settings.bookmaker,
-                                    bovada: settings.bovada } });
+                                    bovada: settings.bovada,
+                                    myBookie: setting.myBookie } });
     }
   }
 
@@ -120,6 +124,13 @@ const SettingsForm = props => {
           title="   Bovada"
           checked={settings.bovada}
           onPress={() => setSettings({...settings, ["bovada"]: !settings.bovada})}
+          containerStyle={styles.checkbox}
+          titleProps={{style: styles.checkboxTitle}}
+        />
+        <CheckBox
+          title="   MyBookie"
+          checked={settings.myBookie}
+          onPress={() => setSettings({...settings, ["myBookie"]: !settings.myBookie})}
           containerStyle={styles.checkbox}
           titleProps={{style: styles.checkboxTitle}}
         />

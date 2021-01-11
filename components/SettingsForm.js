@@ -81,7 +81,7 @@ const SettingsForm = props => {
       updateSettings({ variables: { betOnline: settings.betOnline, 
                                     bookmaker: settings.bookmaker,
                                     bovada: settings.bovada,
-                                    myBookie: setting.myBookie } });
+                                    myBookie: settings.myBookie } });
     }
   }
 

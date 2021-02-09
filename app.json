@@ -10,10 +10,10 @@
       "android",
       "web"
     ],
-    "version": "0.1.8",
+    "version": "0.1.9",
     "android": {
       "package": "com.sharksb.app",
-      "versionCode": 18,
+      "versionCode": 19,
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
       "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE",
@@ -22,7 +22,6 @@
                     "com.android.launcher.permission.INSTALL_SHORTCUT",
                     "com.google.android.c2dm.permission.RECEIVE",
                     "com.google.android.gms.permission.ACTIVITY_RECOGNITION",
-                    "com.google.android.providers.gsf.permission.READ_GSERVICES",
                     "com.htc.launcher.permission.READ_SETTINGS",
                     "com.htc.launcher.permission.UPDATE_SHORTCUT",
                     "com.majeur.launcher.permission.UPDATE_BADGE",

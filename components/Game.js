@@ -81,106 +81,114 @@ const Game = props => {
     <View style={styles.game}>
       <View style={styles.row}>
         <View style={styles.info}>
-          <SharkText>{g.displayTime}</SharkText>
+          <SharkText muted={!(g.status == "Scheduled")}>{g.displayTime}</SharkText>
         </View>
         <View style={styles.rotation}>
-          <SharkText>{g.visitorRot}</SharkText>
+          <SharkText muted={!(g.status == "Scheduled")}>{g.visitorRot}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText>{g.visitor.shortDisplayName}</SharkText>
+          <SharkText muted={!(g.status == "Scheduled")}>{g.visitor.shortDisplayName}</SharkText>
         </View>
         <View style={styles.moneyline}>
-          {g.displayVisitorMl ?
+          {g.displayVisitorMl && g.status == "Scheduled" ?
             <Button title={g.displayVisitorMl}
                     type="clear"
                     onPress={event => goToTrigger(g.visitor.id, 'moneyline', 'greater_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button} />
-            : <React.Fragment/>
+          :
+            <SharkText muted>{g.displayVisitorMl}</SharkText>
           }
         </View>
         <View style={styles.total}>
-          {g.displayOver ? 
+          {g.displayOver && g.status == "Scheduled" ? 
             <Button title={g.displayOver}
                     type="clear"
                     onPress={event => goToTrigger(null, 'total', 'less_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button}/>
-            : <React.Fragment/>
+          :
+            <SharkText muted>{g.displayOver}</SharkText>
           }
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
-            {g.displayVisitorSpread ?
+            {g.displayVisitorSpread && g.status == "Scheduled" ?
               <Button title={g.displayVisitorSpread}
                       type="clear"
                       onPress={event => goToTrigger(g.visitor.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/>            
-              : <React.Fragment/>
+            :
+              <SharkText muted>{g.displayVisitorSpread}</SharkText>
             }
           </View>
           <View style={styles.line}>
-            {g.displayVisitorRl ?
+            {g.displayVisitorRl && g.status == "Scheduled" ?
               <Button title={g.displayVisitorRl}
                       type="clear"
                       onPress={event => goToTrigger(g.visitor.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/>    
-              : <React.Fragment/>
+            :
+              <SharkText muted>{g.displayVisitorRl}</SharkText>
             }
           </View>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.info}>
-          <SharkText>{g.channel}</SharkText>
+          <SharkText muted={!(g.status == "Scheduled")}>{g.channel}</SharkText>
         </View>
         <View style={styles.rotation}>
-          <SharkText>{g.homeRot}</SharkText>
+          <SharkText muted={!(g.status == "Scheduled")}>{g.homeRot}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText>{g.home.shortDisplayName}</SharkText>
+          <SharkText muted={!(g.status == "Scheduled")}>{g.home.shortDisplayName}</SharkText>
         </View>
         <View style={styles.moneyline}>
-          {g.displayHomeMl ?
+          {g.displayHomeMl && g.status == "Scheduled" ?
             <Button title={g.displayHomeMl}
                     type="clear"
                     onPress={event => goToTrigger(g.home.id, 'moneyline', 'greater_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button}/>
-            : <React.Fragment/>
+          :
+            <SharkText muted>{g.displayHomeMl}</SharkText>
           }
         </View>
         <View style={styles.total}>
-          {g.displayUnder ? 
+          {g.displayUnder && g.status == "Scheduled" ? 
             <Button title={g.displayUnder}
                     type="clear"
                     onPress={event => goToTrigger(null, 'total', 'greater_eq')} 
                     titleStyle={styles.buttonText}
                     buttonStyle={styles.button}/>                      
-            : <React.Fragment/>
+          :
+            <SharkText muted>{g.displayUnder}</SharkText>
           }
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
-            {g.displayHomeSpread ?
+            {g.displayHomeSpread && g.status == "Scheduled" ?
               <Button title={g.displayHomeSpread}
                       type="clear"
                       onPress={event => goToTrigger(g.home.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/> 
-              : <React.Fragment/>
+            :
+              <SharkText muted>{g.displayHomeSpread}</SharkText>
             }
           </View>
           <View style={styles.line}>
-            {g.displayHomeRl ?
+            {g.displayHomeRl && g.status == "Scheduled" ?
               <Button title={g.displayHomeRl}
                       type="clear"
                       onPress={event => goToTrigger(g.home.id, spreadOrRunline(), 'greater_eq')} 
                       titleStyle={styles.buttonText}
                       buttonStyle={styles.button}/> 
-              : <React.Fragment/>
+            :
+              <SharkText muted>{g.displayHomeRl}</SharkText>
             }
           </View>
         </View>

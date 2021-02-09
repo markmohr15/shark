@@ -96,7 +96,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const client = new ApolloClient({
       cache: cache,
       uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'http://00d0ee8d039a.ngrok.io/graphql',
+      //uri: 'http://8c21e3fc78a1.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token
       }
@@ -152,7 +152,7 @@ const App = (props) => {
     })
 
     const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    //const httpLink = new HttpLink({ uri: 'http://00d0ee8d039a.ngrok.io/graphql' });
+    //const httpLink = new HttpLink({ uri: 'http://8c21e3fc78a1.ngrok.io/graphql' });
 
     const client = new ApolloClient({
       cache: cache,
@@ -302,7 +302,7 @@ const Application = (navigation) => {
   }
 
   if (loading) return <Loading/>
-  if (error) return <ErrorMsg error={error}/>
+  if (error) return <ErrorMsg error={error.message}/>
 
   return (
     <Drawer.Navigator initialRouteName="Triggers">
@@ -312,7 +312,8 @@ const Application = (navigation) => {
                        key={sport.id} 
                        initialParams={{sportId: sport.id, 
                                        abbreviation: sport.abbreviation,
-                                       date: today()}} />    
+                                       date: today(),
+                                       status: "Open"}} />    
       ))}
       <Drawer.Screen name="Triggers" 
                      component={TriggersScreen}

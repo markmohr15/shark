@@ -124,7 +124,7 @@ const TriggersScreen = ({ route, navigation }) => {
   });
 
   if (loading) return <Loading/>
-  if (error) return <ErrorMsg error={error}/>
+  if (error) return <ErrorMsg error={error.message}/>
 
   return (
     <View style={styles.container}>

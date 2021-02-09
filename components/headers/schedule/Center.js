@@ -40,7 +40,8 @@ const Center = props => {
                 props.abbreviation, 
                 {sportId: props.sportId, 
                  abbreviation: props.abbreviation, 
-                 date: yesterday()}
+                 date: yesterday(),
+                 status: props.status}
               )}
         />
       </View>
@@ -55,7 +56,8 @@ const Center = props => {
                 props.abbreviation, 
                 {sportId: props.sportId, 
                  abbreviation: props.abbreviation, 
-                 date: tomorrow()}
+                 date: tomorrow(),
+                 status: props.status}
               )}
         />
       </View>      

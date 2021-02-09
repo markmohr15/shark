@@ -8,6 +8,7 @@ import BottomNav from '../components/BottomNav';
 import SharkText from '../components/SharkText';
 import CenterHeader from '../components/headers/schedule/Center';
 import LeftHeader from '../components/headers/schedule/Left';
+import RightHeader from '../components/headers/schedule/Right';
 import Game from '../components/Game';
 
 const styles = StyleSheet.create({
@@ -25,8 +26,8 @@ const styles = StyleSheet.create({
 })
 
 const GET_GAMES_BY_SPORT_AND_DATE = gql`
-  query gamesBySportAndDate($sportId: Int!, $date: String!){
-    gamesBySportAndDate(sportId: $sportId, date: $date) {
+  query gamesBySportAndDate($sportId: Int!, $date: String!, $status: String!){
+    gamesBySportAndDate(sportId: $sportId, date: $date, status: $status) {
       id
       displayHomeSpread
       displayHomeMl
@@ -66,6 +67,7 @@ const ScheduleScreen = ({ route, navigation }) => {
   const sportId = parseInt(route.params.sportId)
   const abbreviation = route.params.abbreviation
   const date = route.params.date
+  const status = route.params.status
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -76,13 +78,13 @@ const ScheduleScreen = ({ route, navigation }) => {
   }, [navigation]);
 
   const { loading, error, data, refetch } = useQuery(GET_GAMES_BY_SPORT_AND_DATE, {
-    variables: { sportId: sportId, date: date },
+    variables: { sportId: sportId, date: date, status: status },
     fetchPolicy: "cache-and-network",
     pollInterval: 120000
   });
 
   if (loading) return <Loading/>
-  if (error) return <ErrorMsg error={error}/>
+  if (error) return <ErrorMsg error={error.message}/>
 
   return (
     <View style={styles.container}>
@@ -91,13 +93,22 @@ const ScheduleScreen = ({ route, navigation }) => {
           leftComponent={<LeftHeader abbreviation={abbreviation}
                                      sportId={route.params.sportId}
                                      date={date}
-                                     navigation={navigation} /> }
+                                     navigation={navigation}
+                                     status={status} /> }
           centerComponent={<CenterHeader abbreviation={abbreviation}
                                          sportId={route.params.sportId}
                                          date={date} 
-                                         navigation={navigation} /> }
+                                         navigation={navigation}
+                                         status={status} /> }
+          rightComponent={<RightHeader abbreviation={abbreviation}
+                                       sportId={route.params.sportId}
+                                       date={date} 
+                                       navigation={navigation}
+                                       status={status} /> }
           containerStyle={{backgroundColor: 'white', justifyContent: 'space-around'}}
-          centerContainerStyle={{justifyContent: 'space-around'}}
+          leftContainerStyle={{alignItems: 'center', height: 40, justifyContent: 'center', borderRadius: 1, borderWidth: 1, borderColor: 'black', borderRadius: 8}}
+          centerContainerStyle={{justifyContent: 'space-around', flex: 2.2}}
+          rightContainerStyle={{alignItems: 'center', height: 40, justifyContent: 'center', borderRadius: 1, borderWidth: 1, borderColor: 'black', borderRadius: 8}}
         />
         {data.gamesBySportAndDate.length == 0 ? 
           <View style={styles.none}>

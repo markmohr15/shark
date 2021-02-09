@@ -6,12 +6,15 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     fontSize: 14,
+  },
+  muted: {
+    color: "#6c757d"
   }
 });
 
 const SharkText = (props) => {
   return (
-    <Text style={styles.text}>
+    <Text style={props.muted ? styles.muted : styles.text}>
       {props.children}
     </Text>
   )

@@ -15,7 +15,7 @@ import TriggerFormScreen from './screens/TriggerFormScreen';
 import SearchScreen from './screens/SearchScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import SignOut from './components/SignOut';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-community/async-storage';
 import { persistCache } from 'apollo3-cache-persist';
 import { ApolloProvider, useQuery, useApolloClient, gql, ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/client';

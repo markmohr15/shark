@@ -10,10 +10,10 @@
       "android",
       "web"
     ],
-    "version": "0.1.7",
+    "version": "0.1.8",
     "android": {
       "package": "com.sharksb.app",
-      "versionCode": 17,
+      "versionCode": 18,
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
       "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE",

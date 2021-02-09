@@ -313,7 +313,7 @@ const Application = (navigation) => {
                        initialParams={{sportId: sport.id, 
                                        abbreviation: sport.abbreviation,
                                        date: today(),
-                                       status: "Open"}} />    
+                                       status: "All"}} />    
       ))}
       <Drawer.Screen name="Triggers" 
                      component={TriggersScreen}

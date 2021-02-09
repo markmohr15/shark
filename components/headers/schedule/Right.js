@@ -35,7 +35,7 @@ const Right = props => {
 
   return (
     <>
-      <Text style={styles.status}>{right.status || "Open"}</Text>
+      <Text style={styles.status}>{right.status || "All"}</Text>
       <RNPickerSelect value={right.status}
                       style={headerPickerSelectStyles}
                       onClose={() => submit(right.status)}
@@ -43,8 +43,8 @@ const Right = props => {
                         select(value)
                       }
                       items={[
-                        { label: "Open", value: "Open" },
                         { label: "All", value: "All" },
+                        { label: "Open", value: "Open" },
                       ]}
       />
     </>

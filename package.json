@@ -18,7 +18,7 @@
     "@react-navigation/native": "^5.1.5",
     "@react-navigation/stack": "^5.2.10",
     "apollo3-cache-persist": "^0.6.0",
-    "expo": "^40.0.0",
+    "expo": "^40.0.1",
     "expo-app-loading": "^1.0.1",
     "expo-background-fetch": "~8.6.0",
     "expo-notifications": "~0.8.2",

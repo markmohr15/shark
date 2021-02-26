@@ -39,6 +39,8 @@ const GET_GAMES_BY_SPORT_AND_DATE = gql`
       visitorRot
       displayOver
       displayUnder
+      displayOverOdds
+      displayUnderOdds
       status
       displayTime
       channel

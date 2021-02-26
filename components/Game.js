@@ -18,11 +18,6 @@ const styles = StyleSheet.create({
   info: {
     flex: 1.2,
   },
-  rotation: {
-    flex: 0.9,
-    alignItems: 'flex-end',
-    paddingRight: 10,
-  },
   name: {
     flex: 1.2,
   },
@@ -31,11 +26,20 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   total: {
-    flex: 1.7,
+    flex: 2.6,
+    flexDirection: 'row',
+  },
+  totalLine: {
+    flex: 1.75,
     alignItems: 'flex-end',
   },
+  totalOdds: {
+    flex: 0.8,
+    alignItems: 'flex-end',
+    paddingRight: 5,
+  },
   runline: {
-    flex: 2.2,
+    flex: 2,
     flexDirection: 'row',
   },
   spread: {
@@ -83,9 +87,6 @@ const Game = props => {
         <View style={styles.info}>
           <SharkText muted={!(g.status == "Scheduled")}>{g.displayTime}</SharkText>
         </View>
-        <View style={styles.rotation}>
-          <SharkText muted={!(g.status == "Scheduled")}>{g.visitorRot}</SharkText>
-        </View>
         <View style={styles.name}>
           <SharkText muted={!(g.status == "Scheduled")}>{g.visitor.shortDisplayName}</SharkText>
         </View>
@@ -101,15 +102,28 @@ const Game = props => {
           }
         </View>
         <View style={styles.total}>
-          {g.displayOver && g.status == "Scheduled" ? 
-            <Button title={g.displayOver}
-                    type="clear"
-                    onPress={event => goToTrigger(null, 'total', 'less_eq')} 
-                    titleStyle={styles.buttonText}
-                    buttonStyle={styles.button}/>
-          :
-            <SharkText muted>{g.displayOver}</SharkText>
-          }
+          <View style={styles.totalLine}>
+            {g.displayOver && g.status == "Scheduled" ? 
+              <Button title={g.displayOver}
+                      type="clear"
+                      onPress={event => goToTrigger(null, 'total', 'less_eq')} 
+                      titleStyle={styles.buttonText}
+                      buttonStyle={styles.button}/>
+            :
+              <SharkText muted>{g.displayOver}</SharkText>
+            }
+          </View>
+          <View style={styles.totalOdds}>
+            {g.displayOverOdds && g.status == "Scheduled" ?
+              <Button title={g.displayOverOdds}
+                      type="clear"
+                      onPress={event => goToTrigger(null, 'total', 'less_eq')} 
+                      titleStyle={styles.buttonText}
+                      buttonStyle={styles.button}/>    
+            :
+              <SharkText muted>{g.displayOverOdds}</SharkText>
+            }
+          </View>
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
@@ -140,9 +154,6 @@ const Game = props => {
         <View style={styles.info}>
           <SharkText muted={!(g.status == "Scheduled")}>{g.channel}</SharkText>
         </View>
-        <View style={styles.rotation}>
-          <SharkText muted={!(g.status == "Scheduled")}>{g.homeRot}</SharkText>
-        </View>
         <View style={styles.name}>
           <SharkText muted={!(g.status == "Scheduled")}>{g.home.shortDisplayName}</SharkText>
         </View>
@@ -158,15 +169,28 @@ const Game = props => {
           }
         </View>
         <View style={styles.total}>
-          {g.displayUnder && g.status == "Scheduled" ? 
-            <Button title={g.displayUnder}
-                    type="clear"
-                    onPress={event => goToTrigger(null, 'total', 'greater_eq')} 
-                    titleStyle={styles.buttonText}
-                    buttonStyle={styles.button}/>                      
-          :
-            <SharkText muted>{g.displayUnder}</SharkText>
-          }
+          <View style={styles.totalLine}>
+            {g.displayUnder && g.status == "Scheduled" ? 
+              <Button title={g.displayUnder}
+                      type="clear"
+                      onPress={event => goToTrigger(null, 'total', 'greater_eq')} 
+                      titleStyle={styles.buttonText}
+                      buttonStyle={styles.button}/>                      
+            :
+              <SharkText muted>{g.displayUnder}</SharkText>
+            }
+          </View>
+          <View style={styles.totalOdds}>
+            {g.displayUnderOdds && g.status == "Scheduled" ?
+              <Button title={g.displayUnderOdds}
+                      type="clear"
+                      onPress={event => goToTrigger(null, 'total', 'greater_eq')} 
+                      titleStyle={styles.buttonText}
+                      buttonStyle={styles.button}/>    
+            :
+              <SharkText muted>{g.displayUnderOdds}</SharkText>
+            }
+          </View>
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>

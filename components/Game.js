@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   totalOdds: {
-    flex: 0.8,
+    flex: 0.85,
     alignItems: 'flex-end',
     paddingRight: 5,
   },

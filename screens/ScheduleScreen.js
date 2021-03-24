@@ -81,7 +81,7 @@ const ScheduleScreen = ({ route, navigation }) => {
 
   const { loading, error, data, refetch } = useQuery(GET_GAMES_BY_SPORT_AND_DATE, {
     variables: { sportId: sportId, date: date, status: status },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "cache-first",
     pollInterval: 120000
   });
 

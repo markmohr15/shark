@@ -17,11 +17,6 @@ const styles = StyleSheet.create({
   info: {
     flex: 1.2,
   },
-  rotation: {
-    flex: 0.9,
-    alignItems: 'flex-end',
-    paddingRight: 10,
-  },
   name: {
     flex: 1.2,
   },
@@ -30,11 +25,20 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   total: {
-    flex: 1.7,
+    flex: 2.7,
+    flexDirection: 'row',
+  },
+  totalLine: {
+    flex: 1.75,
+    alignItems: 'flex-end'
+  },
+  totalOdds: {
+    flex: 0.9,
     alignItems: 'flex-end',
+    paddingRight: 5,
   },
   runline: {
-    flex: 2.2,
+    flex: 2,
     flexDirection: 'row',
   },
   spread: {
@@ -42,7 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   line: {
-    flex: 0.7,
+    flex: 0.8,
     alignItems: 'flex-end',
     paddingRight: 5,
   },
@@ -57,9 +61,6 @@ const DisplayGame = props => {
         <View style={styles.info}>
           <SharkText>{g.displayTime}</SharkText>
         </View>
-        <View style={styles.rotation}>
-          <SharkText>{g.visitorRot}</SharkText>
-        </View>
         <View style={styles.name}>
           <SharkText>{g.visitor.shortDisplayName}</SharkText>
         </View>
@@ -67,7 +68,12 @@ const DisplayGame = props => {
           <SharkText>{g.displayVisitorMl}</SharkText>
         </View>
         <View style={styles.total}>
-          <SharkText>{g.displayOver}</SharkText>
+          <View style={styles.totalLine}>
+            <SharkText>{g.displayOver}</SharkText>
+          </View>
+          <View style={styles.totalOdds}>
+            <SharkText>{g.displayOverOdds}</SharkText>
+          </View>
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>
@@ -82,9 +88,6 @@ const DisplayGame = props => {
         <View style={styles.info}>
           <SharkText>{g.channel}</SharkText>
         </View>
-        <View style={styles.rotation}>
-          <SharkText>{g.homeRot}</SharkText>
-        </View>
         <View style={styles.name}>
           <SharkText>{g.home.shortDisplayName}</SharkText>
         </View>
@@ -92,7 +95,12 @@ const DisplayGame = props => {
           <SharkText>{g.displayHomeMl}</SharkText>
         </View>
         <View style={styles.total}>
-          <SharkText>{g.displayUnder}</SharkText>
+          <View style={styles.totalLine}>
+            <SharkText>{g.displayUnder}</SharkText>
+          </View>
+          <View style={styles.totalOdds}>
+            <SharkText>{g.displayUnderOdds}</SharkText>
+          </View>
         </View>
         <View style={styles.runline}>
           <View style={styles.spread}>

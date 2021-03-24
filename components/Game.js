@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   total: {
-    flex: 2.6,
+    flex: 2.7,
     flexDirection: 'row',
   },
   totalLine: {
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   totalOdds: {
-    flex: 0.85,
+    flex: 0.9,
     alignItems: 'flex-end',
     paddingRight: 5,
   },
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   line: {
-    flex: 0.7,
+    flex: 0.8,
     alignItems: 'flex-end',
     paddingRight: 5,
   },

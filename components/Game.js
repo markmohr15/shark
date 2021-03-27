@@ -73,6 +73,10 @@ const Game = props => {
                                                operator: operator})
   }
 
+  const goToGameOdds = () => {
+    props.navigation.navigate("Game Odds", {game: g})
+  }
+
   const spreadOrRunline = () => {
     if (["MLB", "KBO", "NPB", "NHL"].includes(g.sport.abbreviation)) {
       return "runline"
@@ -88,7 +92,11 @@ const Game = props => {
           <SharkText muted={!(g.status == "Scheduled")}>{g.displayTime}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText muted={!(g.status == "Scheduled")}>{g.visitor.shortDisplayName}</SharkText>
+          <Button title={g.visitor.shortDisplayName}
+                  type="clear"
+                  onPress={event => goToGameOdds()}
+                  titleStyle={styles.buttonText}
+                  buttonStyle={styles.button} />
         </View>
         <View style={styles.moneyline}>
           {g.displayVisitorMl && g.status == "Scheduled" ?
@@ -155,7 +163,11 @@ const Game = props => {
           <SharkText muted={!(g.status == "Scheduled")}>{g.channel}</SharkText>
         </View>
         <View style={styles.name}>
-          <SharkText muted={!(g.status == "Scheduled")}>{g.home.shortDisplayName}</SharkText>
+          <Button title={g.home.shortDisplayName}
+                  type="clear"
+                  onPress={event => goToGameOdds()}
+                  titleStyle={styles.buttonText}
+                  buttonStyle={styles.button} />
         </View>
         <View style={styles.moneyline}>
           {g.displayHomeMl && g.status == "Scheduled" ?

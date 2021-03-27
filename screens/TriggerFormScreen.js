@@ -17,10 +17,6 @@ const styles = StyleSheet.create({
     flex: 8,
     paddingTop: 5,
   },
-  header: {
-    color: "white",
-    textAlign: 'center',
-  },
 })
 
 const TriggerFormScreen = ({ route, navigation }) => {

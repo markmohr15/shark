@@ -107,28 +107,28 @@ const SettingsForm = props => {
       }
       <View>
         <CheckBox
-          title="   BetOnline"
+          title="   BetOnline  (BOL)"
           checked={settings.betOnline}
           onPress={() => setSettings({...settings, ["betOnline"]: !settings.betOnline})}
           containerStyle={styles.checkbox}
           titleProps={{style: styles.checkboxTitle}}
         />
         <CheckBox
-          title="   Bookmaker"
+          title="   Bookmaker  (BM)"
           checked={settings.bookmaker}
           onPress={() => setSettings({...settings, ["bookmaker"]: !settings.bookmaker})}
           containerStyle={styles.checkbox}
           titleProps={{style: styles.checkboxTitle}}
         />
         <CheckBox
-          title="   Bovada"
+          title="   Bovada  (BOV)"
           checked={settings.bovada}
           onPress={() => setSettings({...settings, ["bovada"]: !settings.bovada})}
           containerStyle={styles.checkbox}
           titleProps={{style: styles.checkboxTitle}}
         />
         <CheckBox
-          title="   MyBookie"
+          title="   MyBookie  (MyB)"
           checked={settings.myBookie}
           onPress={() => setSettings({...settings, ["myBookie"]: !settings.myBookie})}
           containerStyle={styles.checkbox}

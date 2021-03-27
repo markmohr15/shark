@@ -12,6 +12,7 @@ import SignUpScreen from './screens/SignUpScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
 import TriggersScreen from './screens/TriggersScreen';
 import TriggerFormScreen from './screens/TriggerFormScreen';
+import GameOddsScreen from './screens/GameOddsScreen';
 import SearchScreen from './screens/SearchScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import SignOut from './components/SignOut';
@@ -96,7 +97,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const client = new ApolloClient({
       cache: cache,
       uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'http://8c21e3fc78a1.ngrok.io/graphql',
+      //uri: 'http://d09c5cc4b199.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token
       }
@@ -152,7 +153,7 @@ const App = (props) => {
     })
 
     const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    //const httpLink = new HttpLink({ uri: 'http://8c21e3fc78a1.ngrok.io/graphql' });
+    //const httpLink = new HttpLink({ uri: 'http://d09c5cc4b199.ngrok.io/graphql' });
 
     const client = new ApolloClient({
       cache: cache,
@@ -285,6 +286,9 @@ const Root = (props) => {
         <RootStack.Screen name="Trigger Form" 
                           component={TriggerFormScreen}
                           options={{headerBackTitleVisible: false}} />
+        <RootStack.Screen name="Game Odds" 
+                          component={GameOddsScreen}
+                          options={{headerBackTitleVisible: false}} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
@@ -319,7 +323,7 @@ const Application = (navigation) => {
                      component={TriggersScreen}
                      initialParams={{sportId: '', 
                                      status: 'Open',
-                                     date: today()}} />    
+                                     date: today()}} />
       <Drawer.Screen name="Search" component={SearchScreen} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Sign Out" component={SignOut} />

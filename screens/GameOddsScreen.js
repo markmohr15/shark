@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';
@@ -13,16 +13,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 2,
     backgroundColor: "black",
   },
-  odds: {
-    flex: 1,
-  },
-  form: {
-    flex: 8,
-    paddingTop: 5,
-  },
-  header: {
-    color: "white",
-    textAlign: 'center',
+  none: {
+    paddingTop: 20,
+    alignItems: 'center',
   },
 })
 
@@ -84,21 +77,19 @@ const GameOddsScreen = ({ route, navigation }) => {
       style={styles.container}
     >
       <View style={styles.container}>
-        <View style={styles.odds}>
-          {data.game.lastLines.length == 0 ?
-            <View style={styles.none}>
-              <SharkText>No Lines Found</SharkText>
-            </View>
-          :
-            <ScrollView>
-              {data.game.lastLines.map(line => (
-                <GameLine game={route.params.game}
-                          line={line}
-                          key={line.id} />
-              ))}
-            </ScrollView>
-          }
-        </View>
+        {data.game.lastLines.length == 0 ?
+          <View style={styles.none}>
+            <SharkText>No Lines Found</SharkText>
+          </View>
+        :
+          <ScrollView>
+            {data.game.lastLines.map(line => (
+              <GameLine game={route.params.game}
+                        line={line}
+                        key={line.id} />
+            ))}
+          </ScrollView>
+        }
       </View>
     </KeyboardAvoidingView>
   );

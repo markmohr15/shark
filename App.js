@@ -13,6 +13,7 @@ import ScheduleScreen from './screens/ScheduleScreen';
 import TriggersScreen from './screens/TriggersScreen';
 import TriggerFormScreen from './screens/TriggerFormScreen';
 import GameOddsScreen from './screens/GameOddsScreen';
+import GameInfoScreen from './screens/GameInfoScreen';
 import SearchScreen from './screens/SearchScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import SignOut from './components/SignOut';
@@ -96,8 +97,8 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
-      uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'http://d09c5cc4b199.ngrok.io/graphql',
+      //uri: 'https://sharksb-api.herokuapp.com/graphql',
+      uri: 'http://d09c5cc4b199.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token
       }
@@ -152,8 +153,8 @@ const App = (props) => {
       return forward(operation);
     })
 
-    const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    //const httpLink = new HttpLink({ uri: 'http://d09c5cc4b199.ngrok.io/graphql' });
+    //const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
+    const httpLink = new HttpLink({ uri: 'http://d09c5cc4b199.ngrok.io/graphql' });
 
     const client = new ApolloClient({
       cache: cache,
@@ -288,6 +289,9 @@ const Root = (props) => {
                           options={{headerBackTitleVisible: false}} />
         <RootStack.Screen name="Game Odds" 
                           component={GameOddsScreen}
+                          options={{headerBackTitleVisible: false}} />
+        <RootStack.Screen name="Game Info" 
+                          component={GameInfoScreen}
                           options={{headerBackTitleVisible: false}} />
       </RootStack.Navigator>
     </NavigationContainer>

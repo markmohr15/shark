@@ -18,7 +18,7 @@ import SearchScreen from './screens/SearchScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import SignOut from './components/SignOut';
 import AppLoading from 'expo-app-loading';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistCache } from 'apollo3-cache-persist';
 import { ApolloProvider, useQuery, useApolloClient, gql, ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/client';
 import moment from 'moment';
@@ -26,7 +26,6 @@ import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
 import Loading from './components/Loading';
 import ErrorMsg from './components/ErrorMsg';
 
@@ -98,7 +97,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const client = new ApolloClient({
       cache: cache,
       //uri: 'https://sharksb-api.herokuapp.com/graphql',
-      uri: 'http://d09c5cc4b199.ngrok.io/graphql',
+      uri: 'http://f166-72-206-127-200.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token
       }
@@ -154,7 +153,7 @@ const App = (props) => {
     })
 
     //const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    const httpLink = new HttpLink({ uri: 'http://d09c5cc4b199.ngrok.io/graphql' });
+    const httpLink = new HttpLink({ uri: 'http://f166-72-206-127-200.ngrok.io/graphql' });
 
     const client = new ApolloClient({
       cache: cache,
@@ -401,10 +400,10 @@ async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, 
 async function registerForPushNotificationsAsync() {
   let token;
   if (Constants.isDevice) {
-    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {

@@ -10,6 +10,7 @@ const GET_TOKEN = gql`
 const SignOut = props => {
   const client = useApolloClient();
   useEffect(() => {
+    client.cache.reset()
     client.writeQuery({query: GET_TOKEN, data: {"token": ""}})
   }, []);
   

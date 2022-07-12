@@ -20,11 +20,13 @@ const GET_GAME_INFO = gql`
     game(id: $id) {
       id
       status
-      displayTime
+      datetimeToS
       channel
       sport {
         id
         abbreviation
+        baseball
+        weather
       }
       home {
         id
@@ -38,6 +40,41 @@ const GET_GAME_INFO = gql`
         nickname
         shortDisplayName
       }
+      stadium {
+        name
+        city
+        state
+        country
+        surface
+        stadiumType
+        capacityToS
+        homePlateDirection
+        roofStatusLink
+      }
+      currentWeather {
+        dt
+        temp
+        weather
+        windDeg
+        windSpeed
+      }
+      weatherReports {
+        id
+        day
+        dt
+        eve
+        high
+        low
+        morn
+        night
+        reportType
+        temp
+        weather
+        windDeg
+        windSpeed
+        displayHourlyTime
+      }
+
     }
   }    
 `;

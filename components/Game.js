@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 0,
-    marginLeft: 2,
+    justifyContent: 'flex-start',
+    marginLeft: 0,
     marginRight: 2,
   }
 })

@@ -97,7 +97,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
-      uri: 'https://sharksb-api.herokuapp.com/graphql',3
+      uri: 'https://sharksb-api.herokuapp.com/graphql',
       //uri: 'https://659b-72-206-127-200.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token,

@@ -93,12 +93,12 @@ const GET_TRIGGERED = gql`
 TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
     const options = await TaskManager.getTaskOptionsAsync(FETCH_TRIGGERED)
-    if (!options.token) return BackgroundFetch.Result.NoData;
+    if (!options.token) return BackgroundFetch.BackgroundFetchResult.NoData;
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
-      //uri: 'https://sharksb-api.herokuapp.com/graphql',3
-      uri: 'https://9635-72-206-127-200.ngrok.io/graphql',
+      uri: 'https://sharksb-api.herokuapp.com/graphql',3
+      //uri: 'https://659b-72-206-127-200.ngrok.io/graphql',
       headers: {
         authorization: "Bearer " + options.token,
       }
@@ -108,9 +108,9 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
       fetchPolicy: "network-only"
     })
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, options.expoPushToken));
-    return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
+    return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.BackgroundFetchResult.NewData : BackgroundFetch.BackgroundFetchResult.NoData;
   } catch (error) {
-    return BackgroundFetch.Result.Failed;
+    return BackgroundFetch.BackgroundFetchResult.Failed;
   }
 });
 
@@ -142,8 +142,8 @@ const App = (props) => {
 
   useEffect(() => {
     const httpLink = createHttpLink({
-      uri: 'https://9635-72-206-127-200.ngrok.io/graphql',
-      //uri: 'https://sharksb-api.herokuapp.com/graphql',
+      //uri: 'https://659b-72-206-127-200.ngrok.io/graphql',
+      uri: 'https://sharksb-api.herokuapp.com/graphql',
     });
 
     const authLink = setContext(async () => {

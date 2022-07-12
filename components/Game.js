@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 0,
-    marginLeft: 2,
+    justifyContent: 'flex-start',
+    marginLeft: 0,
     marginRight: 2,
   }
 })
@@ -77,6 +78,10 @@ const Game = props => {
     props.navigation.navigate("Game Odds", {game: g})
   }
 
+  const goToGameInfo = () => {
+    props.navigation.navigate("Game Info", {game: g})
+  }
+
   const spreadOrRunline = () => {
     if (["MLB", "KBO", "NPB", "NHL"].includes(g.sport.abbreviation)) {
       return "runline"
@@ -89,7 +94,11 @@ const Game = props => {
     <View style={styles.game}>
       <View style={styles.row}>
         <View style={styles.info}>
-          <SharkText muted={!(g.status == "Scheduled")}>{g.displayTime}</SharkText>
+          <Button title={g.displayTime}
+                  type="clear"
+                  onPress={event => goToGameInfo()}
+                  titleStyle={styles.buttonText}
+                  buttonStyle={styles.button} />
         </View>
         <View style={styles.name}>
           <Button title={g.visitor.shortDisplayName}

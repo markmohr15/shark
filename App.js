@@ -1,7 +1,7 @@
 import Bugsnag from '@bugsnag/expo';
 Bugsnag.start();
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -13,19 +13,20 @@ import ScheduleScreen from './screens/ScheduleScreen';
 import TriggersScreen from './screens/TriggersScreen';
 import TriggerFormScreen from './screens/TriggerFormScreen';
 import GameOddsScreen from './screens/GameOddsScreen';
+import GameInfoScreen from './screens/GameInfoScreen';
 import SearchScreen from './screens/SearchScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import SignOut from './components/SignOut';
-import AppLoading from 'expo-app-loading';
-import AsyncStorage from '@react-native-community/async-storage';
+import * as SplashScreen from 'expo-splash-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistCache } from 'apollo3-cache-persist';
-import { ApolloProvider, useQuery, useApolloClient, gql, ApolloClient, InMemoryCache, HttpLink, ApolloLink } from '@apollo/client';
+import { ApolloProvider, ApolloLink, useQuery, useApolloClient, gql, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import moment from 'moment';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
 import Loading from './components/Loading';
 import ErrorMsg from './components/ErrorMsg';
 
@@ -92,14 +93,14 @@ const GET_TRIGGERED = gql`
 TaskManager.defineTask(FETCH_TRIGGERED, async () => {
   try {
     const options = await TaskManager.getTaskOptionsAsync(FETCH_TRIGGERED)
-    if (!options.token) return BackgroundFetch.Result.NoData;
+    if (!options.token) return BackgroundFetch.BackgroundFetchResult.NoData;
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
-      uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'http://d09c5cc4b199.ngrok.io/graphql',
+      uri: 'https://sharksb-api.herokuapp.com/graphql',3
+      //uri: 'https://659b-72-206-127-200.ngrok.io/graphql',
       headers: {
-        authorization: "Bearer " + options.token
+        authorization: "Bearer " + options.token,
       }
     });
     const triggered = await client.query({
@@ -107,9 +108,9 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
       fetchPolicy: "network-only"
     })
     triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, options.expoPushToken));
-    return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.NoData;
+    return triggered.data.triggerNotifications.length > 0 ? BackgroundFetch.BackgroundFetchResult.NewData : BackgroundFetch.BackgroundFetchResult.NoData;
   } catch (error) {
-    return BackgroundFetch.Result.Failed;
+    return BackgroundFetch.BackgroundFetchResult.Failed;
   }
 });
 
@@ -140,24 +141,27 @@ const App = (props) => {
   const [client, setClient] = useState(undefined);
 
   useEffect(() => {
-    const cache = new InMemoryCache()      
-      
-    const authMiddleware = new ApolloLink((operation, forward) => {
-      const userToken = client.readQuery({query: GET_TOKEN});
-      operation.setContext({
-        headers: {
-          authorization: userToken.token ? `Bearer ${userToken.token}` : "",
-        }
-      });
-      return forward(operation);
-    })
+    const httpLink = createHttpLink({
+      //uri: 'https://659b-72-206-127-200.ngrok.io/graphql',
+      uri: 'https://sharksb-api.herokuapp.com/graphql',
+    });
 
-    const httpLink = new HttpLink({ uri: 'https://sharksb-api.herokuapp.com/graphql' });
-    //const httpLink = new HttpLink({ uri: 'http://d09c5cc4b199.ngrok.io/graphql' });
+    const authLink = setContext(async () => {
+      const userToken = client.readQuery({query: GET_TOKEN});
+      return {
+        headers: {
+          Authorization: userToken.token ? `Bearer ${userToken.token}` : "",
+        },
+      }
+    });
+
+    const link = ApolloLink.from([authLink, httpLink])
+
+    const cache = new InMemoryCache()
 
     const client = new ApolloClient({
+      link: link,
       cache: cache,
-      link: authMiddleware.concat(httpLink),
     });
 
     client.writeQuery({query: GET_TOKEN, data: {"token": ""}})
@@ -180,18 +184,12 @@ const App = (props) => {
 
 const Shark = (props) => {
   const client = useApolloClient();
-  const [shark, setShark] = useState({
-    isReady: false,
-  })
+  const [appIsReady, setAppIsReady] = useState(false);
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
   const { data } = useQuery(GET_TOKEN);
-
-  const initApp = async () => {
-    console.log('starting up')
-  }
 
   const backgroundFetchTriggered = async () => {
     await BackgroundFetch.registerTaskAsync(FETCH_TRIGGERED, {
@@ -220,20 +218,42 @@ const Shark = (props) => {
     };
   }, []);
 
-  if (!shark.isReady) {
-    return (
-      <AppLoading
-        startAsync={initApp()}
-        onFinish={setShark({...shark, ["isReady"]: true })}
-        onError={console.warn}
-      />
-    )
-  } else if (data.token) {
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  } else if (data && data.token) {
     backgroundFetchTriggered()
+    onLayoutRootView()
     return (
       <Root/>
     )
   } else {
+    onLayoutRootView()
     return (      
       <SignIn/>
     )
@@ -263,7 +283,7 @@ const Root = (props) => {
         query: GET_TRIGGERED,
         fetchPolicy: "network-only"
       })
-      triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoToken));      
+      triggered.data.triggerNotifications.forEach(trigger => parseTrigger(trigger, expoToken));
     } else {
       Bugsnag.notify(new Error('expo push token not set'))
     }
@@ -288,6 +308,9 @@ const Root = (props) => {
                           options={{headerBackTitleVisible: false}} />
         <RootStack.Screen name="Game Odds" 
                           component={GameOddsScreen}
+                          options={{headerBackTitleVisible: false}} />
+        <RootStack.Screen name="Game Info" 
+                          component={GameInfoScreen}
                           options={{headerBackTitleVisible: false}} />
       </RootStack.Navigator>
     </NavigationContainer>
@@ -397,10 +420,10 @@ async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, 
 async function registerForPushNotificationsAsync() {
   let token;
   if (Constants.isDevice) {
-    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
     if (finalStatus !== 'granted') {

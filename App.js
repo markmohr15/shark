@@ -25,7 +25,6 @@ import { setContext } from '@apollo/client/link/context';
 import moment from 'moment';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
-import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import Loading from './components/Loading';
 import ErrorMsg from './components/ErrorMsg';
@@ -419,7 +418,7 @@ async function sendPushNotificationForTotal(expoPushToken, operator, wagerType, 
 
 async function registerForPushNotificationsAsync() {
   let token;
-  if (Constants.isDevice) {
+  if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {

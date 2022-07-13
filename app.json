@@ -36,10 +36,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "notification": {
-      "icon": "./assets/small-shark-grayscale.png",
-      "color": "#000000"
-    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/small-shark-grayscale.png",
+          "color": "#000000",
+          
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },

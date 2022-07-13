@@ -26,6 +26,7 @@ import moment from 'moment';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 import Loading from './components/Loading';
 import ErrorMsg from './components/ErrorMsg';
 

@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 const GET_GAME_INFO = gql`
-  query game($id: ID!){
+  query game($id: Int!){
     game(id: $id) {
       id
       status

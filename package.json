@@ -16,7 +16,6 @@
     "@react-navigation/drawer": "^5.5.1",
     "@react-navigation/native": "^5.1.5",
     "@react-navigation/stack": "^5.2.10",
-    "@unimodules/core": "~7.2.0",
     "apollo3-cache-persist": "^0.6.0",
     "expo": "^45.0.0",
     "expo-background-fetch": "~10.2.0",

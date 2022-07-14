@@ -27,6 +27,7 @@ import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import Constants from 'expo-constants';
 import Loading from './components/Loading';
 import ErrorMsg from './components/ErrorMsg';
 
@@ -97,7 +98,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
-      uri: process.env.API_URL,
+      uri: Constants.manifest.extra.apiUrl,
       headers: {
         authorization: "Bearer " + options.token,
       }
@@ -141,7 +142,7 @@ const App = (props) => {
 
   useEffect(() => {
     const httpLink = createHttpLink({
-      uri: process.env.API_URL,
+      uri: Constants.manifest.extra.apiUrl,
     });
 
     const authLink = setContext(async () => {
@@ -154,7 +155,6 @@ const App = (props) => {
     });
 
     const link = ApolloLink.from([authLink, httpLink])
-
     const cache = new InMemoryCache()
 
     const client = new ApolloClient({

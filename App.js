@@ -97,8 +97,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
-      uri: 'https://sharksb-api.herokuapp.com/graphql',
-      //uri: 'https://659b-72-206-127-200.ngrok.io/graphql',
+      uri: process.env.API_URL,
       headers: {
         authorization: "Bearer " + options.token,
       }
@@ -142,8 +141,7 @@ const App = (props) => {
 
   useEffect(() => {
     const httpLink = createHttpLink({
-      //uri: 'https://659b-72-206-127-200.ngrok.io/graphql',
-      uri: 'https://sharksb-api.herokuapp.com/graphql',
+      uri: process.env.API_URL,
     });
 
     const authLink = setContext(async () => {

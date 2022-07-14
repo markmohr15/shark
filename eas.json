@@ -5,12 +5,19 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://659b-72-206-127-200.ngrok.io/graphql"
+      }
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "env": {
+        "API_URL": "https://sharksb-api.herokuapp.com/graphql"
+      }
+    }
   },
   "submit": {
     "production": {}

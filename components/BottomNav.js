@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   bottonNav: {
     borderTopWidth: 1,
     borderTopColor: "white",
-    flex: 1,
+    flex: 1.1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },

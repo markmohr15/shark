@@ -54,13 +54,15 @@ const Left = props => {
 
   return (
     <>
-      <Text style={styles.sport}>
-        { left.sportId ?
-          sportList().find(s => s.value == left.sportId).label
-        :
-          "All Sports"
-        }        
-      </Text>
+      {Platform.OS === 'android' &&
+        <Text style={styles.sport}>
+          { left.sportId ?
+            sportList().find(s => s.value == left.sportId).label
+          :
+            "All Sports"
+          }        
+        </Text>
+      }
       <RNPickerSelect value={left.sportId}
                       style={headerPickerSelectStyles}
                       onClose={() => submit(left.sportId)}

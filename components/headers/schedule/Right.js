@@ -35,7 +35,9 @@ const Right = props => {
 
   return (
     <>
-      <Text style={styles.status}>{right.status || "All"}</Text>
+      {Platform.OS === 'android' &&
+        <Text style={styles.status}>{right.status || "All"}</Text>
+      }
       <RNPickerSelect value={right.status}
                       style={headerPickerSelectStyles}
                       onClose={() => submit(right.status)}

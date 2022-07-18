@@ -14,6 +14,9 @@
       "distribution": "internal"
     },
     "production": {
+      //"android": {
+        //"buildType": "apk"
+      //},
       "env": {
         "API_URL": "https://sharksb-api.herokuapp.com/graphql"
       }

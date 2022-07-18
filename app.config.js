@@ -52,10 +52,11 @@ export default {
     "assets/images/*"
   ],
   ios: {
-    supportsTablet: true
+    supportsTablet: true,
+    bundleIdentifier: 'com.sharksb.app'
   },
   extra: {
-    apiUrl: process.env.NODE_ENV == 'production' ? 'https://sharksb-api.herokuapp.com/graphql' : 'https://659b-72-206-127-200.ngrok.io/graphql',
+    apiUrl: process.env.API_URL || 'https://659b-72-206-127-200.ngrok.io/graphql',
     bugsnag: {
       apiKey: "ecdce1b1d55d8a6340d4982dce3c6930"
     }

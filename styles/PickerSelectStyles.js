@@ -31,7 +31,7 @@ export const headerPickerSelectStyles = StyleSheet.create({
     fontSize: 12,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: 'gray',
     borderRadius: 8,
     color: 'black',

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Button, Overlay, Text } from 'react-native-elements';
 import BottomNav from '../components/BottomNav';
 import SharkText from '../components/SharkText';
 import SettingsForm from '../components/SettingsForm';
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';
-import { ApolloProvider, useQuery, gql } from '@apollo/client';
+import { ApolloProvider, useQuery, gql, useMutation } from '@apollo/client';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +24,13 @@ const styles = StyleSheet.create({
     flex: 8,
     paddingTop: 30,
   },
+  destroy: {
+    flex: 1,
+  },
+  buttonText: {
+    fontSize: 10,
+    color: 'white',
+  },
 });
 
 const GET_SPORTSBOOKS = gql`
@@ -33,6 +41,14 @@ const GET_SPORTSBOOKS = gql`
   }    
 `;
 
+export const DESTROY_USER = gql`
+  mutation destroyUser {
+    destroyUser(input: {}) {
+      id     
+    }
+  }
+`;
+
 const SettingsScreen = ({ navigation }) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -41,6 +57,27 @@ const SettingsScreen = ({ navigation }) => {
 
     return unsubscribe;
   }, [navigation]);
+
+  const [overlayVisible, setOverlayVisible] = useState(false);
+
+  const [destroyUser] = useMutation(DESTROY_USER,
+    {
+      onCompleted(data) {
+        navigation.navigate('Sign Out')
+      },
+      onError(error) {
+        console.log(error)
+      }
+    }
+  );
+
+  const destroy = async () => {
+    destroyUser();
+  }
+
+  const toggleOverlay = () => {
+    setOverlayVisible(!overlayVisible);
+  };
 
   const { loading, error, data, refetch } = useQuery(GET_SPORTSBOOKS, {
     fetchPolicy: "cache-and-network"
@@ -60,6 +97,24 @@ const SettingsScreen = ({ navigation }) => {
         :
           <SettingsForm sportsbooks={data.sportsbooks.map(x => x.name)}/>
         }
+      </View>
+      <View style={styles.destroy}>
+        <Button title={"Delete Your Account"}
+                type="clear"
+                onPress={event => toggleOverlay()}
+                titleStyle={styles.buttonText}
+        />
+        <Overlay isVisible={overlayVisible} onBackdropPress={toggleOverlay}>
+          <Text>Are you sure you want to delete your account? This is irreversible.</Text>
+          <Button title={"YES"}
+                  type="clear"
+                  onPress={event => destroy()}
+          />
+          <Button title={"NO"}
+                  type="clear"
+                  onPress={event => toggleOverlay()}
+          />
+        </Overlay>
       </View>
       <BottomNav search={true}
                  navigation={navigation}

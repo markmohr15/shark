@@ -330,7 +330,7 @@ const Application = (navigation) => {
   if (error) return <ErrorMsg error={error.message}/>
 
   return (
-    <Drawer.Navigator initialRouteName="Triggers">
+    <Drawer.Navigator initialRouteName={data.allSports[0].abbreviation}>
       {data.allSports.map((sport) => (
         <Drawer.Screen name={sport.abbreviation} 
                        component={ScheduleScreen}

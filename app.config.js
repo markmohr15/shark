@@ -9,10 +9,10 @@ export default {
     "android",
     "web"
   ],
-  version: "0.3.2",
+  version: "0.3.4",
   android: {
     package: "com.sharksb.app",
-    versionCode: 32,
+    versionCode: 34,
     useNextNotificationsApi: true,
     googleServicesFile: "./google-services.json",
     permissions: ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE",
@@ -56,7 +56,7 @@ export default {
     bundleIdentifier: 'com.sharksb.app'
   },
   extra: {
-    apiUrl: process.env.API_URL || 'https://659b-72-206-127-200.ngrok.io/graphql',
+    apiUrl: process.env.API_URL || 'https://c5ac-72-206-127-200.ngrok.io/graphql',
     bugsnag: {
       apiKey: "ecdce1b1d55d8a6340d4982dce3c6930"
     }

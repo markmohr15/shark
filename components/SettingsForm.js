@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
 });
 
 const UPDATE_SETTINGS = gql`
-  mutation updateSettings($betOnline: Boolean!, $bookmaker: Boolean!, 
+  mutation updateSettings($betOnline: Boolean!, $pinnacle: Boolean!, 
                           $bovada: Boolean!, $myBookie: Boolean!) {
-    updateSettings(input: {betOnline: $betOnline, bookmaker: $bookmaker, 
+    updateSettings(input: {betOnline: $betOnline, pinnacle: $pinnacle, 
                            bovada: $bovada, myBookie: $myBookie}) {
       id
     }
@@ -56,7 +56,7 @@ const SettingsForm = props => {
   const client = useApolloClient();
   const [settings, setSettings] = useState({
     betOnline: props.sportsbooks.includes("BetOnline"),
-    bookmaker: props.sportsbooks.includes("Bookmaker"),
+    pinnacle: props.sportsbooks.includes("Pinnacle"),
     bovada: props.sportsbooks.includes("Bovada"),
     myBookie: props.sportsbooks.includes("MyBookie"),
     error: '',
@@ -75,11 +75,11 @@ const SettingsForm = props => {
   );
     
   const submit = async () => {
-    if (!settings.betOnline && !settings.bookmaker && !settings.bovada && !settings.myBookie) {
+    if (!settings.betOnline && !settings.pinnacle && !settings.bovada && !settings.myBookie) {
       setSettings({...settings, ["error"]: "You must select at least one sportsbook.", ["success"]: ""})
     } else {
       updateSettings({ variables: { betOnline: settings.betOnline, 
-                                    bookmaker: settings.bookmaker,
+                                    pinnacle: settings.pinnacle,
                                     bovada: settings.bovada,
                                     myBookie: settings.myBookie } });
     }
@@ -114,9 +114,9 @@ const SettingsForm = props => {
           titleProps={{style: styles.checkboxTitle}}
         />
         <CheckBox
-          title="   Bookmaker  (BM)"
-          checked={settings.bookmaker}
-          onPress={() => setSettings({...settings, ["bookmaker"]: !settings.bookmaker})}
+          title="   Pinnacle  (PIN)"
+          checked={settings.pinnacle}
+          onPress={() => setSettings({...settings, ["pinnacle"]: !settings.pinnacle})}
           containerStyle={styles.checkbox}
           titleProps={{style: styles.checkboxTitle}}
         />

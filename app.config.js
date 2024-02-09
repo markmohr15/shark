@@ -1,6 +1,6 @@
 export default {
-  name: 'Shark SB',
-  description: 'Track line changes',
+  name: 'Shark Sports Betting',
+  description: 'Monitors line movement',
   slug: 'shark-sb',
   backgroundColor: '#000000',
   primaryColor: '#000000',
@@ -9,10 +9,10 @@ export default {
     "android",
     "web"
   ],
-  version: "0.3.4",
+  version: "0.3.5",
   android: {
     package: "com.sharksb.app",
-    versionCode: 34,
+    versionCode: 35,
     useNextNotificationsApi: true,
     googleServicesFile: "./google-services.json",
     permissions: ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE",
@@ -56,9 +56,12 @@ export default {
     bundleIdentifier: 'com.sharksb.app'
   },
   extra: {
-    apiUrl: process.env.API_URL || 'https://c5ac-72-206-127-200.ngrok.io/graphql',
+    apiUrl: process.env.API_URL || 'https://95e3-72-198-216-227.ngrok-free.app/graphql',
     bugsnag: {
       apiKey: "ecdce1b1d55d8a6340d4982dce3c6930"
+    },
+    eas: {
+      projectId: "a40840b7-747e-49bf-be7c-9bdf42068776"
     }
   },
   hooks: {

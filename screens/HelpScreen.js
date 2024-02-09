@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Image } from 'react-native-elements';
 import shark from '../assets/black-shark.png';
 import SharkText from '../components/SharkText';

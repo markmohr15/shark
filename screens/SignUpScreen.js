@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Button, Image } from 'react-native-elements';
 import SignUpForm from '../components/SignUpForm';
 import shark from '../assets/black-shark.png';

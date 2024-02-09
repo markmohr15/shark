@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, Platform } from 'react-native';
 import { Button, Text, Input } from 'react-native-elements';
 import RNPickerSelect, { defaultStyles } from 'react-native-picker-select';
 import { useMutation, gql } from '@apollo/client';

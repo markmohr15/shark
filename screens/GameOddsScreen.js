@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import TriggerForm from '../components/TriggerForm';
 import DisplayGame from '../components/DisplayGame';
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, ScrollView, View, Platform } from 'react-native';
 import { Header } from 'react-native-elements';
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 import Loading from '../components/Loading';

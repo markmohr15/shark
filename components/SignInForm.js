@@ -66,17 +66,17 @@ const SignInForm = props => {
         inputStyle={styles.input}
         placeholder='EMAIL'
         placeholderTextColor="#adacac"
-        leftIcon={{ type: 'font-awesome', name: 'envelope', color: "white" }}
+        leftIcon={{ type: 'font-awesome', name: 'envelope', color: 'white' }}
         value={signIn.email}
         onChangeText={text => setSignIn({...signIn, ["email"]: text})}
         textContentType="username"
       />
       <Input
-        leftIconContainerStyle={{paddingRight: 26, marginLeft: 4}}
+        leftIconContainerStyle={{paddingRight: 25, marginLeft: 5}}
         inputStyle={styles.input}
         placeholder='PASSWORD'
         placeholderTextColor="#adacac"
-        leftIcon={{ type: 'font-awesome', name: 'lock', color: "white" }}
+        leftIcon={{ type: 'font-awesome', name: 'lock', color: 'white' }}
         value={signIn.password}
         onChangeText={text => setSignIn({...signIn, ["password"]: text})}
         textContentType="password"

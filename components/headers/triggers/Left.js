@@ -25,23 +25,12 @@ const GET_SPORTS = gql`
 
 const Left = props => {
   const client = useApolloClient();
-  const [left, setLeft] = useState({
-    sportId: props.sportId,
-  })
 
   const sportList = () => {
     const sports = client.readQuery({query: GET_SPORTS}).allSports
     let list = [{label: "All Sports", value: ""}]
     sports.forEach((sport) => list.push({label: sport.abbreviation, value: sport.id}))
     return list
-  }
-
-  const select = (value) => {
-    if(Platform.OS === 'android') {
-      submit(value)
-    } else {
-      setLeft({...left, ["sportId"]: value})
-    }
   }
 
   const submit = (sportId) => {
@@ -56,18 +45,17 @@ const Left = props => {
     <>
       {Platform.OS === 'android' &&
         <Text style={styles.sport}>
-          { left.sportId ?
-            sportList().find(s => s.value == left.sportId).label
+          { props.sportId ?
+            sportList().find(s => s.value == props.sportId).label
           :
             "All Sports"
           }        
         </Text>
       }
-      <RNPickerSelect value={left.sportId}
+      <RNPickerSelect value={props.sportId || ""}
                       style={headerPickerSelectStyles}
-                      onClose={() => submit(left.sportId)}
                       onValueChange={(value) =>
-                        select(value)
+                        submit(value)
                       }
                       items={sportList()}
       />

@@ -1,53 +1,43 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   status: {
     marginBottom: -20,
-    marginRight: 0,
   }
 });
 
 const Right = props => {
-  const [right, setRight] = useState({
-    status: props.status,
-  })
-
-  const select = (value) => {
-    if(Platform.OS === 'android') {
-      submit(value)
-    } else {
-      setRight({...right, ["status"]: value})
-    }
-  }
-
-  const submit = (status) => {
+  const submit = (newStatus) => {
     props.navigation.navigate(props.abbreviation,
                       {sportId: props.sportId,
                        abbreviation: props.abbreviation,
-                       status: status,
+                       status: dateInPast ? 'All' : newStatus,
                        date: props.date
                       })
   }
 
+  const dateInPast = moment(props.date).isBefore(moment().startOf('day'))
+
+  const items = [{ label: "All", value: "All" },
+               { label: "Open", value: "Open" }]
+  
   return (
     <>
       {Platform.OS === 'android' &&
-        <Text style={styles.status}>{right.status || "All"}</Text>
+        <Text style={styles.status}>{props.status}</Text>
       }
-      <RNPickerSelect value={right.status}
+      <RNPickerSelect value={props.status}
                       style={headerPickerSelectStyles}
-                      onClose={() => submit(right.status)}
                       onValueChange={(value) =>
-                        select(value)
+                        submit(value)
                       }
-                      items={[
-                        { label: "All", value: "All" },
-                        { label: "Open", value: "Open" },
-                      ]}
+                      disabled={dateInPast}
+                      items={items}
       />
     </>
   )

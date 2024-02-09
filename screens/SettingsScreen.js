@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Overlay, Text } from 'react-native-elements';
-import BottomNav from '../components/BottomNav';
 import SharkText from '../components/SharkText';
 import SettingsForm from '../components/SettingsForm';
 import Loading from '../components/Loading';
@@ -116,9 +115,6 @@ const SettingsScreen = ({ navigation }) => {
           />
         </Overlay>
       </View>
-      <BottomNav search={true}
-                 navigation={navigation}
-      />
     </View>
   );
 }

@@ -49,10 +49,6 @@ export const headerPickerSelectStyles = StyleSheet.create({
     color: 'white',
     paddingRight: 10, // to ensure the text is never behind the icon
     marginBottom: -20,
-    //marginRight: -40,
-    //marginLeft: 10,
-    width: 65,
-    //height: 60,
-    //backgroundColor: 'red'
+    width: 66,
   },
 });

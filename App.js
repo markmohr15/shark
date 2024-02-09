@@ -14,7 +14,6 @@ import TriggersScreen from './screens/TriggersScreen';
 import TriggerFormScreen from './screens/TriggerFormScreen';
 import GameOddsScreen from './screens/GameOddsScreen';
 import GameInfoScreen from './screens/GameInfoScreen';
-import SearchScreen from './screens/SearchScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import SignOut from './components/SignOut';
 import * as SplashScreen from 'expo-splash-screen';
@@ -98,7 +97,7 @@ TaskManager.defineTask(FETCH_TRIGGERED, async () => {
     const cache = new InMemoryCache()
     const client = new ApolloClient({
       cache: cache,
-      uri: Constants.manifest.extra.apiUrl,
+      uri: Constants.expoConfig.extra.apiUrl,
       headers: {
         authorization: "Bearer " + options.token,
       }
@@ -142,7 +141,7 @@ const App = (props) => {
 
   useEffect(() => {
     const httpLink = createHttpLink({
-      uri: Constants.manifest.extra.apiUrl,
+      uri: Constants.expoConfig.extra.apiUrl,
     });
 
     const authLink = setContext(async () => {
@@ -194,7 +193,9 @@ const Shark = (props) => {
         minimumInterval: 5,
         stopOnTerminate: false,
         startOnBoot: true,
-        expoPushToken: (await Notifications.getExpoPushTokenAsync()).data,
+        expoPushToken: (await Notifications.getExpoPushTokenAsync({
+          projectId: 'a40840b7-747e-49bf-be7c-9bdf42068776'
+        })).data,
         token: data.token
     });
   }
@@ -275,7 +276,9 @@ const Root = (props) => {
   let timer = ''
 
   const fetchTriggered = async () => {
-    const expoToken = (await Notifications.getExpoPushTokenAsync()).data
+    const expoToken = (await Notifications.getExpoPushTokenAsync({
+      projectId: 'a40840b7-747e-49bf-be7c-9bdf42068776'
+    })).data
     if (expoToken) {
       const triggered = await client.query({
         query: GET_TRIGGERED,
@@ -296,14 +299,16 @@ const Root = (props) => {
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator mode="modal">
+      <RootStack.Navigator>
         <RootStack.Screen name="Application"
                           component={Application}
-                          options={{ headerShown: false }}
+                          options={{ headerShown: false, headerBackTitleVisible: false }}
         />
-        <RootStack.Screen name="Trigger Form" 
+        <RootStack.Screen name="Trigger Form"
                           component={TriggerFormScreen}
-                          options={{headerBackTitleVisible: false}} />
+                          options={({ route }) => ({
+                            title: route.params.target ? 'Update Trigger' : 'Create Trigger', headerBackTitleVisible: false
+                          })} />
         <RootStack.Screen name="Game Odds" 
                           component={GameOddsScreen}
                           options={{headerBackTitleVisible: false}} />
@@ -322,9 +327,7 @@ const Application = (navigation) => {
     pollInterval: 1800000
   });
 
-  const today = () => {
-    return moment(new Date()).format('YYYY-MM-DD')
-  }
+  const today = moment(new Date()).format('YYYY-MM-DD')
 
   if (loading) return <Loading/>
   if (error) return <ErrorMsg error={error.message}/>
@@ -337,15 +340,14 @@ const Application = (navigation) => {
                        key={sport.id} 
                        initialParams={{sportId: sport.id, 
                                        abbreviation: sport.abbreviation,
-                                       date: today(),
+                                       date: today,
                                        status: "All"}} />    
       ))}
       <Drawer.Screen name="Triggers" 
                      component={TriggersScreen}
                      initialParams={{sportId: '', 
                                      status: 'Open',
-                                     date: today()}} />
-      <Drawer.Screen name="Search" component={SearchScreen} />
+                                     date: today}} />
       <Drawer.Screen name="Settings" component={SettingsScreen} />
       <Drawer.Screen name="Sign Out" component={SignOut} />
     </Drawer.Navigator>
@@ -428,7 +430,9 @@ async function registerForPushNotificationsAsync() {
       alert('Failed to get push token for push notification!');
       return;
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
+    token = (await Notifications.getExpoPushTokenAsync({
+      projectId: 'a40840b7-747e-49bf-be7c-9bdf42068776'
+    })).data;
   } else {
     alert('Must use physical device for Push Notifications');
   }

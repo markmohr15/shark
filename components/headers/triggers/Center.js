@@ -22,12 +22,11 @@ const styles = StyleSheet.create({
 })
 
 const Center = props => {
-  const yesterday = () => {
-    return moment(props.date).subtract(1, 'days').format('YYYY-MM-DD')
-  }
+  const dayBefore = moment(props.date).subtract(1, 'days').format('YYYY-MM-DD')
+  const dayAfter =  moment(props.date).add(1, 'days').format('YYYY-MM-DD')
 
-  const tomorrow = () => {
-    return moment(props.date).add(1, 'days').format('YYYY-MM-DD')
+  const dayInPast = (day) => {
+    return moment(day).isBefore(moment().startOf('day'))
   }
 
   return (
@@ -38,8 +37,8 @@ const Center = props => {
               color="black"
               onPress={() => props.navigation.navigate("Triggers", 
                 {sportId: props.sportId, 
-                 status: props.status, 
-                 date: yesterday()}
+                 status: dayInPast(dayBefore) && props.status == 'Open' ? '' : props.status, 
+                 date: dayBefore}
               )}
         />
       </View>
@@ -52,8 +51,8 @@ const Center = props => {
               color="black"
               onPress={() => props.navigation.navigate("Triggers",
                 {sportId: props.sportId, 
-                 status: props.status, 
-                 date: tomorrow()}
+                 status: dayInPast(dayAfter) && props.status == 'Open' ? '' : props.status,  
+                 date: dayAfter}
               )}
         />
       </View>      

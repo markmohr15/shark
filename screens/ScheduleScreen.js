@@ -4,9 +4,7 @@ import { Header } from 'react-native-elements';
 import { ApolloProvider, useQuery, gql } from '@apollo/client';
 import Loading from '../components/Loading';
 import ErrorMsg from '../components/ErrorMsg';
-import BottomNav from '../components/BottomNav';
 import SharkText from '../components/SharkText';
-import CenterHeader from '../components/headers/schedule/Center';
 import LeftHeader from '../components/headers/schedule/Left';
 import RightHeader from '../components/headers/schedule/Right';
 import Game from '../components/Game';
@@ -17,7 +15,7 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
   },
   none: {
-    paddingTop: 20,
+    paddingTop: 30,
     alignItems: 'center',
   },
   schedule: {
@@ -72,11 +70,11 @@ const ScheduleScreen = ({ route, navigation }) => {
   const status = route.params.status
 
   React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const reload = navigation.addListener('focus', () => {
       refetch()
     });
 
-    return unsubscribe;
+    return reload;
   }, [navigation]);
 
   const { loading, error, data, refetch } = useQuery(GET_GAMES_BY_SPORT_AND_DATE, {
@@ -85,49 +83,49 @@ const ScheduleScreen = ({ route, navigation }) => {
     pollInterval: 120000
   });
 
-  if (loading) return <Loading/>
-  if (error) return <ErrorMsg error={error.message}/>
+  let content;
+  if (loading) {
+    content = <Loading/>
+  } else if (error) {
+    content = <ErrorMsg error={error.message} />
+  } else if (data.gamesBySportAndDate.length == 0 && status == 'Open') {
+    content = <View style={styles.none}>
+                <SharkText>No Open Games</SharkText>
+              </View>
+  } else if (data.gamesBySportAndDate.length == 0) {
+    content = <View style={styles.none}>
+                <SharkText>No Games</SharkText>
+              </View>
+  } else {
+    content = <ScrollView> 
+                {data.gamesBySportAndDate.map(game => (
+                  <Game key={game.id}
+                        game={game} 
+                        navigation={navigation} />
+                ))}
+              </ScrollView>
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.schedule}>
         <Header
           leftComponent={<LeftHeader abbreviation={abbreviation}
-                                     sportId={route.params.sportId}
-                                     date={date}
+                                     sportId={sportId}
+                                     date={date} 
                                      navigation={navigation}
                                      status={status} /> }
-          centerComponent={<CenterHeader abbreviation={abbreviation}
-                                         sportId={route.params.sportId}
-                                         date={date} 
-                                         navigation={navigation}
-                                         status={status} /> }
           rightComponent={<RightHeader abbreviation={abbreviation}
                                        sportId={route.params.sportId}
                                        date={date} 
                                        navigation={navigation}
                                        status={status} /> }
-          containerStyle={{backgroundColor: 'white', justifyContent: 'space-around'}}
-          leftContainerStyle={{alignItems: 'center', height: 40, justifyContent: 'center', borderRadius: 1, borderWidth: 1, borderColor: 'black', borderRadius: 8}}
-          centerContainerStyle={{justifyContent: 'space-around', flex: 2.2}}
-          rightContainerStyle={{alignItems: 'center', height: 40, justifyContent: 'center', borderRadius: 1, borderWidth: 1, borderColor: 'black', borderRadius: 8}}
+          containerStyle={{backgroundColor: 'white', marginTop: 0, paddingTop: 0, height: 45}}
+          leftContainerStyle={{justifyContent: 'space-around', flex: 6.5 }}
+          rightContainerStyle={{flex: 3, justifyContent: 'space-around', alignItems: 'center', justifyContent: 'center', borderRadius: 1, borderWidth: 1, borderColor: 'black', borderRadius: 8}}
         />
-        {data.gamesBySportAndDate.length == 0 ? 
-          <View style={styles.none}>
-            <SharkText>No Open Games</SharkText>
-          </View>
-        :  
-          <ScrollView> 
-            {data.gamesBySportAndDate.map(game => (
-              <Game key={game.id}
-                    game={game} 
-                    navigation={navigation} />
-            ))}
-          </ScrollView>
-        }
+        {content}
       </View>
-      <BottomNav search={true}
-                 navigation={navigation} />
     </View>
   );
 

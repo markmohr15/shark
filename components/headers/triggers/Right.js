@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-elements';
 import RNPickerSelect from 'react-native-picker-select';
 import { headerPickerSelectStyles } from '../../../styles/PickerSelectStyles';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
   status: {
@@ -12,17 +13,8 @@ const styles = StyleSheet.create({
 });
 
 const Right = props => {
-  const [right, setRight] = useState({
-    status: props.status,
-  })
-
-  const select = (value) => {
-    if(Platform.OS === 'android') {
-      submit(value)
-    } else {
-      setRight({...right, ["status"]: value})
-    }
-  }
+  const dateInPast = moment(props.date).isBefore(moment().startOf('day'))
+  const defaultStatus = dateInPast ? "" : "Open"
 
   const submit = (status) => {
     props.navigation.navigate('Triggers',
@@ -32,24 +24,28 @@ const Right = props => {
                       })
   }
 
+  let items = [ { label: "Open", value: "Open" },
+                { label: "Triggered", value: "Triggered" },
+                { label: "Expired", value: "Expired" },
+                { label: "Canceled", value: "Canceled" },
+                { label: "All", value: "" },
+              ]
+
+  if (dateInPast) {
+    items = items.filter(x => x.value != "Open")
+  }
+
   return (
     <>
       {Platform.OS === 'android' &&
-        <Text style={styles.status}>{right.status || "All"}</Text>
+        <Text style={styles.status}>{props.status || "All"}</Text>
       }
-      <RNPickerSelect value={right.status}
+      <RNPickerSelect value={props.status}
                       style={headerPickerSelectStyles}
-                      onClose={() => submit(right.status)}
                       onValueChange={(value) =>
-                        select(value)
+                        submit(value)
                       }
-                      items={[
-                        { label: "Open", value: "Open" },
-                        { label: "Triggered", value: "Triggered" },
-                        { label: "Expired", value: "Expired" },
-                        { label: "Canceled", value: "Canceled" },
-                        { label: "All", value: "" },
-                      ]}
+                      items={items}
       />
     </>
   )

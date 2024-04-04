@@ -1,11 +1,10 @@
+import 'react-native-gesture-handler';
 import Bugsnag from '@bugsnag/expo';
-Bugsnag.start();
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { Image, StyleSheet, Text, View, Platform } from 'react-native';
+import { Image, StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
 import ErrorScreen from './screens/ErrorScreen';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -32,6 +31,7 @@ import ErrorMsg from './components/ErrorMsg';
 
 const FETCH_TRIGGERED = 'background-fetch';
 
+Bugsnag.start();
 const ErrorBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
 
 const styles = StyleSheet.create({
@@ -262,6 +262,7 @@ const Shark = (props) => {
 const SignIn = () => {
   return (
     <NavigationContainer>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <Stack.Navigator>
         <Stack.Screen name="Sign In" component={SignInScreen} />
         <Stack.Screen name="Sign Up" component={SignUpScreen} />
@@ -299,6 +300,7 @@ const Root = (props) => {
 
   return (
     <NavigationContainer>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <RootStack.Navigator>
         <RootStack.Screen name="Application"
                           component={Application}

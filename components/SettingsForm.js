@@ -44,9 +44,11 @@ const styles = StyleSheet.create({
 
 const UPDATE_SETTINGS = gql`
   mutation updateSettings($betOnline: Boolean!, $pinnacle: Boolean!, 
-                          $bovada: Boolean!, $draftKings: Boolean!) {
+                          $bovada: Boolean!, $draftKings: Boolean!,
+                          $caesars: Boolean!) {
     updateSettings(input: {betOnline: $betOnline, pinnacle: $pinnacle, 
-                           bovada: $bovada, draftKings: $draftKings}) {
+                           bovada: $bovada, draftKings: $draftKings,
+                           caesars: $caesars}) {
       id
     }
   }
@@ -59,6 +61,7 @@ const SettingsForm = props => {
     pinnacle: props.sportsbooks.includes("Pinnacle"),
     bovada: props.sportsbooks.includes("Bovada"),
     draftKings: props.sportsbooks.includes("DraftKings"),
+    caesars: props.sportsbooks.includes("Caesars"),
     error: '',
     success: '',
   })
@@ -75,13 +78,14 @@ const SettingsForm = props => {
   );
     
   const submit = async () => {
-    if (!settings.betOnline && !settings.pinnacle && !settings.bovada && !settings.draftKings) {
+    if (!settings.betOnline && !settings.pinnacle && !settings.bovada && !settings.draftKings && !settings.caesars) {
       setSettings({...settings, ["error"]: "You must select at least one sportsbook.", ["success"]: ""})
     } else {
       updateSettings({ variables: { betOnline: settings.betOnline, 
                                     pinnacle: settings.pinnacle,
                                     bovada: settings.bovada,
-                                    draftKings: settings.draftKings} });
+                                    draftKings: settings.draftKings,
+                                    caesars: settings.caesars} });
     }
   }
 
@@ -131,6 +135,13 @@ const SettingsForm = props => {
           title="   DraftKings  (DK)"
           checked={settings.draftKings}
           onPress={() => setSettings({...settings, ["draftKings"]: !settings.draftKings})}
+          containerStyle={styles.checkbox}
+          titleProps={{style: styles.checkboxTitle}}
+        />
+        <CheckBox
+          title="   Caesars  (CZR)"
+          checked={settings.caesars}
+          onPress={() => setSettings({...settings, ["caesars"]: !settings.caesars})}
           containerStyle={styles.checkbox}
           titleProps={{style: styles.checkboxTitle}}
         />

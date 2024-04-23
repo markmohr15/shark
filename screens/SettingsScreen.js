@@ -10,12 +10,12 @@ import { ApolloProvider, useQuery, gql, useMutation } from '@apollo/client';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    paddingTop: 10,
     backgroundColor: "black",
   },
   message: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: 40,
     paddingLeft: 15,
     paddingRight: 15,
   },
@@ -104,15 +104,17 @@ const SettingsScreen = ({ navigation }) => {
                 titleStyle={styles.buttonText}
         />
         <Overlay isVisible={overlayVisible} onBackdropPress={toggleOverlay}>
-          <Text>Are you sure you want to delete your account? This is irreversible.</Text>
-          <Button title={"YES"}
-                  type="clear"
-                  onPress={event => destroy()}
-          />
-          <Button title={"NO"}
-                  type="clear"
-                  onPress={event => toggleOverlay()}
-          />
+          <>  
+            <Text>Are you sure you want to delete your account? This is irreversible.</Text>
+            <Button title={"YES"}
+                    type="clear"
+                    onPress={event => destroy()}
+            />
+            <Button title={"NO"}
+                    type="clear"
+                    onPress={event => toggleOverlay()}
+            />
+          </>
         </Overlay>
       </View>
     </View>

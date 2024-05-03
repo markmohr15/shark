@@ -28,7 +28,7 @@
     "expo-file-system": "~16.0.9",
     "expo-notifications": "~0.27.7",
     "expo-sharing": "~11.10.0",
-    "expo-splash-screen": "~0.26.4",
+    "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
     "expo-task-manager": "~11.7.2",
     "graphql": "^15.0.0",

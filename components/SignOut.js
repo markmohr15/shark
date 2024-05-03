@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApolloClient, gql } from '@apollo/client';
+import * as BackgroundFetch from 'expo-background-fetch';
 
 const GET_TOKEN = gql`
   query token {
@@ -12,6 +13,7 @@ const SignOut = props => {
   useEffect(() => {
     client.cache.reset()
     client.writeQuery({query: GET_TOKEN, data: {"token": ""}})
+    BackgroundFetch.unregisterTaskAsync(FETCH_TRIGGERED)
   }, []);
   
 

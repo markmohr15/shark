@@ -218,17 +218,7 @@ const Shark = (props) => {
   }, []);
 
   useEffect(() => {
-    async function prepare() {
-      try {
-        await SplashScreen.preventAutoHideAsync();
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setAppIsReady(true);
-      }
-    }
-
-    prepare();
+    setAppIsReady(true);
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
@@ -449,6 +439,8 @@ async function registerForPushNotificationsAsync() {
   }
   return token;
 }
+
+SplashScreen.preventAutoHideAsync();
 
 export default () =>
   <ErrorBoundary FallbackComponent={ErrorScreen}>

@@ -9,10 +9,10 @@ export default {
     "android",
     "web"
   ],
-  version: "0.3.8",
+  version: "0.3.9",
   android: {
     package: "com.sharksb.app",
-    versionCode: 38,
+    versionCode: 39,
     useNextNotificationsApi: true,
     googleServicesFile: "./google-services.json",
     permissions: ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE",

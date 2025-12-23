@@ -68,7 +68,7 @@ const SignUpForm = props => {
         : <React.Fragment></React.Fragment>
       }
       <Input
-        leftIconContainerStyle={{paddingRight: 20}}
+        leftIconContainerStyle={{paddingRight: 21}}
         inputStyle={styles.input}
         placeholder='EMAIL'
         placeholderTextColor="#adacac"

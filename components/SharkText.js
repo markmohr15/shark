@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
   }
 });
 
-const SharkText = (props) => {
+const SharkText = ({children, muted = false}) => {
   return (
-    <Text style={props.muted ? styles.muted : styles.text}>
-      {props.children}
+    <Text style={muted ? styles.muted : styles.text}>
+      {children}
     </Text>
   )
 }
